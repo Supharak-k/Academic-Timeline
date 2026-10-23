@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เส้นทางการขอตำแหน่งทางวิชาการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!--
+  หน้าแรก: ให้ผู้ใช้เลือกบทบาทก่อนเข้าคู่มือ (manual.html)
+  อาจารย์ → manual.html?role=applicant   ·   เจ้าหน้าที่ → staff.html
+-->
+<style>
+  :root {
+    --ink: #111111; --muted: #5f5a66; --line: #e8e8e8; --bg: #ffffff; --soft: #f7f7f7;
+    --accent: #f26522; --app: #8f4bb3; --hr: #e25a1c;
+    --grad: radial-gradient(1200px 600px at 0% 0%, #ffe7d6 0%, transparent 60%),
+            radial-gradient(900px 600px at 100% 10%, #efe3fb 0%, transparent 60%),
+            radial-gradient(900px 700px at 60% 100%, #e6f3e0 0%, transparent 60%),
+            linear-gradient(160deg, #fff8f3 0%, #f8f5fc 50%, #f4f9f1 100%);
+    --glass: rgba(255,255,255,.55); --glass-line: rgba(255,255,255,.85); --glass-shadow: 0 10px 40px rgba(90,60,120,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #f2f2f2; --muted: #b3adbb; --line: #2c2c2c; --bg: #121212; --soft: #1a1a1a; --app: #9b55c2; --hr: #e25a1c;
+      --grad: radial-gradient(1200px 600px at 0% 0%, #3a2116 0%, transparent 60%),
+              radial-gradient(900px 600px at 100% 10%, #2a1d3a 0%, transparent 60%),
+              radial-gradient(900px 700px at 60% 100%, #1d2a1a 0%, transparent 60%),
+              linear-gradient(160deg, #17130f 0%, #15131a 50%, #121611 100%);
+      --glass: rgba(40,36,48,.45); --glass-line: rgba(255,255,255,.12); --glass-shadow: 0 10px 40px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  /* ใช้ min-height ให้หน้าเต็มจออย่างน้อย 1 จอ แต่ยืดได้เมื่อเนื้อหายาว (มือถือเลื่อนได้) */
+  body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
+  body {
+    margin: 0; background: var(--grad); background-color: var(--bg); background-attachment: fixed; color: var(--ink);
+    font-family: "IBM Plex Sans Thai", system-ui, sans-serif; line-height: 1.6;
+    display: flex; flex-direction: column;
+  }
+  main { flex: 1; display: grid; place-items: center; padding: 48px 16px; overflow: clip; }
+  .box { width: min(760px, 100%); }
+  .org { position: relative; z-index: 1; padding: 20px 24px 0; font-size: .875rem; color: var(--muted); letter-spacing: .02em; display: flex; align-items: center; gap: 10px; }
+  .org::before { content: ""; width: 24px; height: 2px; background: var(--accent); }
+  h1 { font-weight: 600; font-size: clamp(2rem, 6vw, 3rem); line-height: 1.2; margin: 0 0 10px; letter-spacing: -.01em; }
+  .lead { color: var(--muted); margin: 0 0 40px; font-size: 1.05rem; }
+  .q { font-weight: 500; margin-bottom: 14px; }
+  .choices { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  /* วงสีด้านหลังการ์ด ให้เห็นเอฟเฟกต์กระจก */
+  .choices::before, .choices::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(70px); pointer-events: none; }
+  .choices::before { width: 600px; height: 600px; left: -260px; top: -280px; background: radial-gradient(circle, rgba(242,101,34,.36), rgba(242,101,34,0) 70%); }
+  .choices::after { width: 800px; height: 800px; right: -340px; bottom: -380px; background: radial-gradient(circle, rgba(143,75,179,.30), rgba(143,75,179,0) 70%); }
+  .box { position: relative; z-index: 0; }
+  a.choice {
+    display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: inherit;
+    border: 1px solid var(--glass-line); border-radius: 20px; padding: 26px;
+    background: var(--glass); -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255,255,255,.6);
+    transition: transform .2s, box-shadow .2s;
+  }
+  a.choice:hover { transform: translateY(-3px); box-shadow: 0 16px 48px rgba(90,60,120,.18), inset 0 1px 0 rgba(255,255,255,.6); }
+  a.choice:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; margin-bottom: 14px; box-shadow: 0 0 0 5px rgba(255,255,255,.6); }
+  .choice b { font-weight: 600; font-size: 1.3rem; }
+  .choice span { color: var(--muted); font-size: .95rem; }
+  .choice .go {
+    margin-top: 22px; align-self: stretch; text-align: center; color: #fff; font-weight: 600; font-size: 1rem;
+    background: var(--btn); border-radius: 12px; padding: 12px 18px; box-shadow: 0 6px 18px color-mix(in srgb, var(--btn) 35%, transparent);
+    transition: filter .15s;
+  }
+  a.choice:hover .go { filter: brightness(1.08); }
+  .last { margin-top: 8px; font-size: .75rem; color: var(--accent); min-height: 1em; text-align: center; }
+  footer { border-top: 1px solid var(--glass-line); background: var(--glass); backdrop-filter: blur(12px); padding: 18px 16px; font-size: .8rem; color: var(--muted); text-align: center; }
+  @media (max-width: 600px) { .choices { grid-template-columns: minmax(0, 1fr); } .lead { margin-bottom: 28px; } }
+</style>
+</head>
+<body>
+<header class="org"><b>หน่วยบริหารงานบุคคล</b> · คณะพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่</header>
+<main>
+  <div class="box">
+    <h1>เส้นทาง<br>การขอตำแหน่งทางวิชาการ</h1>
+    <p class="lead">สำหรับ ผู้ช่วยศาสตราจารย์ (ผศ.) · องศาสตราจารย์ (รศ.) · ศาสตราจารย์ (ศ.) <br>คู่มือการทำงานตามข้อบังคับ มช. พ.ศ. 2569 </p>
+    <p class="lead"></p>
+    <div class="choices">
+      <a class="choice" href="manual.html?role=applicant" data-role="applicant" style="--btn:var(--app)">
+        <b>อาจารย์ผู้ขอตำแหน่ง</b>
+        <span>เกณฑ์ ขั้นตอน เอกสารที่ต้องเตรียม และดาวน์โหลดแบบฟอร์ม</span>
+        <span class="go">คู่มือ</span>
+        <span class="last"></span>
+      </a>
+      <a class="choice" href="staff.html" data-role="hr" style="--btn:var(--hr)">
+        <b>เจ้าหน้าที่งานบุคคลฯ</b>
+        <span>งานตรวจสอบ การเสนอเรื่อง กำหนดเวลา และจัดการแบบฟอร์ม</span>
+        <span class="go">คู่มือ</span>
+        <span class="last"></span>
+      </a>
+    </div>
+  </div>
+</main>
+<footer>ติดต่อ นางเบญจพร จุฑาโรจน์ · benjaporn.chu@cmu.ac.th · 0 53 949071</footer>
+<script>
+
+</script>
+</body>
+</html>

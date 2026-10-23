@@ -1,0 +1,1427 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มือขอตำแหน่งวิชาการ</title>
+<script>
+  // ต้องเลือกบทบาทที่หน้าแรกก่อนเสมอ
+  (function () {
+    var r = new URLSearchParams(location.search).get("role");
+    if (r === "hr") { location.replace("staff.html"); return; }
+    if (r !== "applicant") { location.replace("index.html"); return; }
+    document.documentElement.setAttribute("data-view", r);
+    try { localStorage.setItem("arm1-view", JSON.stringify(r)); } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== สีและค่าพื้นฐาน (แก้สีได้ที่นี่ที่เดียว) ===== */
+  :root {
+    --ink: #111111; --muted: #6b6b6b; --faint: #9a9a9a;
+    --line: #e8e8e8; --line-2: #f1f1f1;
+    --bg: #ffffff; --soft: #f7f7f7;
+    --accent: #f26522; --accent-soft: #fff4ee;
+    --ok: #1f8a4c; --warn: #c0392b; --warn-soft: #fdf2f1;
+    /* สีบทบาท */
+    --c-app: #8f4bb3; --c-head: #3b82c4; --c-hr: #6b7d1f; --c-com: #5b50b0; --c-dean: #c27c0e; --c-uni: #555555;
+    --radius: 12px;
+    --nav-bg: #26232b; --nav-fg: #c9c4cf; --nav-line: #26232b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #f2f2f2; --muted: #a3a3a3; --faint: #777; --line: #2c2c2c; --line-2: #222;
+      --bg: #121212; --soft: #1a1a1a; --accent: #ff8a4c; --accent-soft: #2a1d16;
+      --ok: #4cc683; --warn: #ff8a7a; --warn-soft: #2b1816;
+      --c-app: #c48ee0; --c-head: #79b4ec; --c-hr: #b3c55a; --c-com: #a197ef; --c-dean: #f0b252; --c-uni: #bdbdbd;
+      --nav-bg: #2b2833; --nav-fg: #c9c4cf; --nav-line: #3a3642;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 112px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink); overflow-x: hidden;
+    font-family: "IBM Plex Sans Thai", system-ui, sans-serif; font-size: 16px; line-height: 1.7;
+  }
+  h1, h2, h3, h4 { font-weight: 600; line-height: 1.3; margin: 0; letter-spacing: -.005em; }
+  p { margin: 0 0 .6em; }
+  a { color: inherit; }
+  ul, ol { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 3px; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .875rem; }
+  .hidden { display: none !important; }
+  .ref { color: var(--faint); font-size: .78rem; }
+
+  /* ===== แถบบน ===== */
+  .topbar { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 14px; padding: 12px 0 8px; flex-wrap: wrap; }
+  .title { font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+  .title::before { content: ""; width: 18px; height: 2px; background: var(--accent); }
+  .grow { flex: 1; }
+  .who { display: inline-flex; align-items: center; gap: 8px; font-size: .875rem; border: 1px solid var(--line); border-radius: 999px; padding: 4px 6px 4px 12px; white-space: nowrap; }
+  .who i { width: 8px; height: 8px; border-radius: 50%; }
+  .who a { text-decoration: none; background: var(--soft); border-radius: 999px; padding: 2px 10px; color: var(--muted); }
+  .who a:hover { color: var(--ink); }
+  .search { position: relative; flex: 0 1 220px; min-width: 120px; }
+  .search input { width: 100%; border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 12px 6px 34px; font-size: .9rem; }
+  .search svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--faint); }
+  .btn { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 14px; font-size: .875rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; white-space: nowrap; }
+  .btn:hover { border-color: var(--ink); }
+  .btn.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn.primary:hover { opacity: .85; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  /* แถบเมนู: พื้นหลังสีเข้มแยกจากเนื้อหาชัดเจน */
+  .navband { background: var(--nav-bg); border-top: 1px solid var(--nav-line); }
+  nav.links { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; padding: 8px 0; }
+  nav.links::-webkit-scrollbar { display: none; }
+  nav.links a { text-decoration: none; color: var(--nav-fg); font-size: .875rem; white-space: nowrap; padding: 5px 14px; border-radius: 999px; transition: background .15s, color .15s; }
+  nav.links a:hover { color: #fff; background: rgba(255,255,255,.16); }
+  nav.links a.active { color: var(--nav-bg); background: #fff; font-weight: 600; }
+  /* สีแถบเมนูตามบทบาท */
+  html[data-view="applicant"] { --nav-bg: #8f4bb3; --nav-line: #8f4bb3; --nav-fg: rgba(255,255,255,.85); }
+  html[data-view="hr"] { --nav-bg: #e25a1c; --nav-line: #e25a1c; --nav-fg: rgba(255,255,255,.85); }
+  @media (prefers-color-scheme: dark) {
+    html[data-view="applicant"] { --nav-bg: #6e3a8c; --nav-line: #6e3a8c; }
+    html[data-view="hr"] { --nav-bg: #b8460f; --nav-line: #b8460f; }
+  }
+
+  /* ===== ส่วนหัวหน้า ===== */
+  .hero { padding: 56px 0 36px; display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 40px; align-items: end; border-bottom: 1px solid var(--line); }
+  .eyebrow { font-size: .85rem; color: var(--muted); }
+  .hero h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin: 10px 0 14px; }
+  .hero .lead { color: var(--muted); max-width: 52ch; }
+  .focus h3 { font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .focus ol { list-style: none; padding: 0; counter-reset: f; }
+  .focus li { counter-increment: f; display: flex; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line-2); }
+  .focus li::before { content: counter(f, decimal-leading-zero); color: var(--accent); font-weight: 500; font-size: .85rem; padding-top: 2px; }
+  .deadline { display: flex; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+  .deadline .n { font-size: 1.6rem; font-weight: 600; color: var(--warn); min-width: 84px; }
+  .deadline .n small { font-size: .8rem; font-weight: 400; margin-left: 4px; }
+  .deadline .t { flex: 1 1 300px; }
+
+  /* ===== หัวข้อแต่ละส่วน ===== */
+  section.block { padding: 64px 0 0; }
+  .sec-head { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 4px 12px; margin-bottom: 26px; }
+  .sec-num { color: var(--accent); font-weight: 500; font-size: .9rem; padding-top: 8px; }
+  .sec-head h2 { font-size: clamp(1.4rem, 2.6vw, 1.85rem); }
+  .sec-head p { grid-column: 2; color: var(--muted); margin: 0; }
+  .card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); }
+  .pad { padding: 20px; }
+  .grid-2 { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  h3.sub { font-size: 1.05rem; margin-bottom: 10px; }
+
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; color: var(--muted); white-space: nowrap; }
+  .tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--c); flex: none; }
+  .time { display: inline-block; font-size: .75rem; border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 0 8px; white-space: nowrap; }
+  .reg { display: inline-block; font-size: .75rem; border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 0 8px; }
+  .note { border-left: 2px solid var(--accent); padding: 4px 0 4px 14px; margin: 18px 0; color: var(--muted); font-size: .925rem; }
+  .note b { color: var(--ink); font-weight: 600; }
+  .note.warn { border-color: var(--warn); }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+
+  /* ===== ภาพรวม ===== */
+  .phase { padding: 22px; }
+  .phase .k { font-size: .8rem; color: var(--accent); font-weight: 500; }
+  .phase h3 { font-size: 1.1rem; margin: 4px 0 12px; }
+  .phase ol { padding-left: 18px; color: var(--muted); font-size: .925rem; }
+  .phase .meta { margin-top: 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .phase a.more { display: inline-block; margin-top: 14px; font-size: .9rem; text-decoration: none; border-bottom: 1px solid var(--line); }
+  .phase a.more:hover { border-color: var(--ink); }
+
+  /* ===== Swimlane ===== */
+  .lanes { position: relative; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 30px 28px; padding: 8px 4px 20px; }
+  .lane-bg { grid-row: 1 / -1; margin: -8px -10px 0; border-radius: 14px; background: color-mix(in srgb, var(--c) 7%, transparent); }
+  .lane-h { font-size: .85rem; font-weight: 500; display: flex; gap: 8px; align-items: center; padding: 6px 2px 8px; border-bottom: 2px solid var(--c); position: relative; z-index: 1; }
+  .lane-h i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .node {
+    position: relative; z-index: 1; width: 100%; text-align: left; align-self: start;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: .875rem; line-height: 1.45;
+    transition: border-color .15s;
+  }
+  .node:hover { border-color: var(--lc); }
+  .node .seq { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--lc); color: var(--lc); font-size: .7rem; font-weight: 600; margin-bottom: 6px; }
+  .node b { display: block; font-weight: 500; }
+  .node .s { display: block; color: var(--muted); font-size: .78rem; margin-top: 2px; }
+  .node .time { margin-top: 6px; }
+  .node .lane-label { display: none; margin-left: 6px; }
+  .node.dashed { border-style: dashed; }
+  svg.arrows { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: visible; }
+  svg.arrows path.ln { fill: none; stroke-width: 1.6; stroke-linejoin: round; }
+  svg.arrows path.dash { stroke-dasharray: 5 4; }
+
+  dialog.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; width: min(480px, 100vw); border: 0; border-left: 1px solid var(--line); padding: 0; background: var(--bg); color: var(--ink); }
+  dialog.drawer::backdrop { background: rgba(0,0,0,.25); }
+  .dr-head { position: sticky; top: 0; background: var(--bg); padding: 20px 22px 14px; border-bottom: 1px solid var(--line); display: flex; gap: 12px; }
+  .dr-head .k { font-size: .8rem; color: var(--accent); }
+  .dr-head h3 { font-size: 1.15rem; margin-top: 2px; }
+  .dr-body { padding: 8px 22px 40px; }
+  .dr-body h4 { font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 22px 0 8px; }
+  .x { margin-left: auto; border: 1px solid var(--line); background: var(--bg); width: 34px; height: 34px; border-radius: 50%; font-size: 1.1rem; line-height: 1; flex: none; }
+  .tip { background: var(--soft); border-radius: 10px; padding: 12px 14px; margin-top: 18px; font-size: .925rem; }
+  .tip b { font-weight: 600; }
+
+  /* ===== ระดับมหาวิทยาลัย ===== */
+  .road { position: relative; padding-left: 48px; }
+  .road::before { content: ""; position: absolute; left: 15px; top: 14px; bottom: 14px; width: 1px; background: var(--line); }
+  .stop { position: relative; }
+  .stop .pin { position: absolute; left: -48px; top: 14px; width: 31px; height: 31px; border-radius: 50%; background: var(--bg); border: 1px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-size: .85rem; font-weight: 600; }
+  .stop .pin.sub { border-style: dashed; font-size: .65rem; }
+  details.step { border-bottom: 1px solid var(--line); }
+  details.step > summary { list-style: none; cursor: pointer; padding: 16px 0; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  details.step > summary::-webkit-details-marker { display: none; }
+  details.step > summary h3 { font-size: 1rem; font-weight: 500; flex: 1 1 240px; }
+  details.step > summary::after { content: "+"; color: var(--faint); font-size: 1.2rem; margin-left: auto; }
+  details.step[open] > summary::after { content: "−"; }
+  .step-body { padding: 0 0 18px; color: var(--muted); }
+  .docs { margin-top: 16px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; color: var(--ink); }
+  .docs-h { background: var(--soft); padding: 8px 14px; font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .drow { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 14px; border-top: 1px solid var(--line-2); }
+  .dn { font-size: .925rem; }
+  .dn small { display: block; color: var(--muted); font-size: .78rem; }
+  .dn small.dm { color: var(--faint); }
+  .dact { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .dact .btn { padding: 4px 12px; font-size: .8rem; }
+  .btn.danger { color: var(--warn); }
+  .btn.danger:hover { border-color: var(--warn); }
+  @media (max-width: 600px) { .drow { grid-template-columns: minmax(0, 1fr); } .dact { justify-content: flex-start; } }
+  @media print { .dact { display: none; } }
+  .step-body .tip { color: var(--ink); }
+  .outcome { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 26px; }
+  .outcome h3 { font-size: 1.05rem; margin-bottom: 10px; display: flex; gap: 10px; align-items: center; }
+  .outcome h3::before { content: "✓"; color: var(--ok); }
+  .council { display: block; text-align: center; color: var(--muted); font-size: .9rem; margin-top: 24px; }
+
+  /* ===== เกณฑ์ ===== */
+  .tabs { display: flex; gap: 24px; border-bottom: 1px solid var(--line); margin-bottom: 22px; overflow-x: auto; }
+  .tabs button { border: 0; background: none; padding: 8px 0; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+  .crit-grid { display: grid; gap: 16px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .crit .lbl { font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .routes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .route { border-top: 2px solid var(--ink); padding-top: 12px; }
+  .route b { display: block; font-weight: 600; margin-bottom: 6px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; min-width: 560px; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 500; color: var(--muted); font-size: .8rem; }
+
+  /* ===== แบบฟอร์ม ===== */
+  .form-list { border-top: 1px solid var(--line); }
+  .form-group-h { font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; padding: 18px 0 6px; }
+  .frow { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line-2); }
+  .ftype { width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--line); display: grid; place-items: center; font-size: .68rem; font-weight: 600; color: var(--muted); }
+  .ftype.pdf { color: var(--warn); }
+  .ftype.doc { color: var(--c-head); }
+  .frow b { font-weight: 500; display: block; }
+  .frow .d { color: var(--muted); font-size: .85rem; }
+  .frow .m { color: var(--faint); font-size: .78rem; }
+  .fact { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .admin { margin-top: 26px; background: var(--soft); border-radius: var(--radius); padding: 20px; }
+  .admin h3 { font-size: 1.05rem; margin-bottom: 4px; }
+  .status { display: flex; gap: 8px; align-items: center; font-size: .875rem; margin: 12px 0; }
+  .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+  .status.on i { background: var(--ok); }
+  .fgrid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 12px; }
+  .field label { display: block; font-size: .8rem; color: var(--muted); margin-bottom: 4px; }
+  .field input, .field select { width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-size: .9rem; z-index: 90; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  .parts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: var(--radius); }
+  .part { padding: 16px; border-left: 1px solid var(--line); }
+  .part:first-child { border-left: 0; }
+  .part .n { font-size: .75rem; color: var(--accent); font-weight: 500; }
+  .part h4 { font-size: .95rem; margin: 2px 0 8px; }
+  .part ul { font-size: .82rem; color: var(--muted); padding-left: 16px; }
+  .part .w { margin-top: 10px; display: flex; flex-direction: column; gap: 2px; }
+  .roles7 { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0; border-top: 1px solid var(--line); margin-top: 14px; }
+  .roles7 div { padding: 10px 8px 10px 0; font-size: .82rem; color: var(--muted); border-bottom: 1px solid var(--line-2); }
+  .roles7 b { color: var(--ink); font-weight: 600; margin-right: 4px; }
+
+  /* ===== Checklist ===== */
+  .ck-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .ck-head h3 { font-size: 1.05rem; flex: 1; }
+  .bar-p { height: 3px; background: var(--line); border-radius: 9px; margin: 10px 0 6px; overflow: hidden; }
+  .bar-p i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .25s; }
+  .chk { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line-2); }
+  .chk:last-child { border-bottom: 0; }
+  .chk input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--ink); flex: none; }
+  .chk label { flex: 1; cursor: pointer; }
+  .chk .q { color: var(--accent); font-size: .8rem; margin-left: 6px; white-space: nowrap; }
+  .chk .d { display: block; color: var(--muted); font-size: .85rem; }
+  .chk.done label > span:first-child { text-decoration: line-through; color: var(--faint); }
+
+  /* ===== บันทึกข้อความ ===== */
+  .memo { display: flex; flex-direction: column; padding: 22px; }
+  .memo .k { font-size: .8rem; color: var(--accent); font-weight: 500; }
+  .memo h3 { font-size: 1.05rem; margin: 4px 0 6px; }
+  .memo ul { color: var(--muted); font-size: .9rem; margin: 10px 0; }
+  .memo .att { font-size: .85rem; color: var(--muted); }
+  .memo .btn { margin-top: auto; align-self: flex-start; }
+  .memo .sp { flex: 1; min-height: 14px; }
+
+  /* ===== เครื่องมือวางแผน ===== */
+  .result { margin-top: 14px; padding: 14px 0 0; border-top: 1px solid var(--line); }
+  .result .big { font-size: 1.3rem; font-weight: 600; }
+  .result.ok .big { color: var(--ok); }
+  .result.no .big { color: var(--warn); }
+  .totals { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 14px; }
+  .totals div { border-top: 2px solid var(--accent); padding-top: 8px; }
+  .totals b { display: block; font-size: 1.05rem; font-weight: 600; }
+  .g-row { display: grid; grid-template-columns: 240px minmax(0, 1fr) 150px; gap: 14px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line-2); font-size: .85rem; }
+  .g-track { position: relative; height: 8px; background: var(--line-2); border-radius: 9px; }
+  .g-bar { position: absolute; top: 0; height: 100%; border-radius: 9px; background: var(--lc); min-width: 3px; }
+  .g-bar.range { opacity: .25; }
+  .g-date { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* ===== FAQ ===== */
+  details.faq { border-bottom: 1px solid var(--line); }
+  details.faq summary { list-style: none; cursor: pointer; padding: 16px 0; font-weight: 500; display: flex; gap: 12px; }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary::after { content: "+"; margin-left: auto; color: var(--faint); }
+  details.faq[open] summary::after { content: "−"; }
+  details.faq .a { padding: 0 0 16px; color: var(--muted); }
+
+  footer { margin-top: 80px; border-top: 1px solid var(--line); padding: 32px 0 48px; }
+  footer .wrap { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); }
+  footer h3 { font-size: .8rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  footer .small { color: var(--muted); }
+  .no-result { text-align: center; padding: 30px; color: var(--muted); }
+
+  /* ===== แสดงเฉพาะบทบาท ===== */
+  html[data-view="applicant"] [data-for="hr"] { display: none !important; }
+  html[data-view="hr"] [data-for="applicant"] { display: none !important; }
+
+  /* ===== จอเล็ก ===== */
+  @media (max-width: 900px) {
+    .parts { grid-template-columns: minmax(0, 1fr); }
+    .part { border-left: 0; border-top: 1px solid var(--line); }
+    .part:first-child { border-top: 0; }
+  }
+  @media (max-width: 860px) {
+    .hero, .grid-2, .grid-3, .crit-grid, .outcome, footer .wrap { grid-template-columns: minmax(0, 1fr); }
+    .hero { padding-top: 36px; gap: 28px; }
+    .lanes { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0; }
+    .lane-bg, .lane-h { display: none; }
+    .node { grid-column: 1 !important; grid-row: auto !important; }
+    .node .lane-label { display: inline-flex; }
+    .g-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+    .g-date { text-align: left; }
+  }
+  @media (max-width: 600px) {
+    .topbar { position: relative; }
+    html { scroll-padding-top: 12px; }
+    .search { flex-basis: 100%; order: 9; }
+    .sec-head { grid-template-columns: minmax(0, 1fr); }
+    .sec-head p { grid-column: 1; }
+    .sec-num { padding: 0; }
+    .frow { grid-template-columns: 40px minmax(0, 1fr); }
+    .fact { grid-column: 1 / -1; justify-content: flex-start; }
+  }
+
+  /* ===== ตอนพิมพ์: สวิมเลน 5 เลนแบบเดียวกับบนจอ กว้างคงที่ แล้วย่อให้พอดีหน้า (JS ใส่คลาส printing) ===== */
+  html.printing .lanes { width: 1500px; max-width: none; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 18px 30px !important; padding: 8px 4px 12px !important; }
+  html.printing .node { padding: 7px 12px; font-size: .9rem; }
+  html.printing .node .seq { margin-bottom: 2px; }
+  html.printing .node .time { margin-top: 3px; }
+  html.printing .lane-bg { display: block !important; }
+  html.printing .lane-h { display: flex !important; }
+  html.printing .node { grid-column: var(--gc) !important; grid-row: var(--gr) !important; }
+  html.printing .node .lane-label { display: none !important; }
+
+  @page lanes { size: A4 landscape; margin: 10mm; }
+  @media print {
+    .topbar, .no-print, dialog, .admin, .toast { display: none !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    section.block { padding-top: 28px; }
+    .sec-head { break-after: avoid; }
+    details.step, .card, .chk, .frow { break-inside: avoid; }
+    #faculty { page: lanes; padding-top: 0; }
+    #faculty .sec-head { margin-bottom: 12px; }
+    .lanes { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="bar">
+      <div class="title">คู่มือขอตำแหน่งทางวิชาการ</div>
+      <div class="grow"></div>
+      <label class="search">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="ค้นหา" aria-label="ค้นหาในคู่มือ">
+      </label>
+      <span class="who"><i id="whoDot"></i><span id="whoName"></span><a href="index.html">เปลี่ยน</a></span>
+      <button type="button" class="btn" id="printBtn">พิมพ์</button>
+    </div>
+  </div>
+  <div class="navband"><div class="wrap">
+    <nav class="links" aria-label="สารบัญ">
+      <a href="#overview">ภาพรวม</a>
+      <a href="#faculty">ขั้นตอนระดับคณะ</a>
+      <a href="#university">ระดับมหาวิทยาลัย</a>
+      <a href="#criteria">คุณสมบัติและเกณฑ์</a>
+      <a href="#forms">แบบฟอร์ม</a>
+      <a href="#checklist">Checklist</a>
+      <a href="#memos">บันทึกข้อความ</a>
+      <a href="#planner">วางแผนเวลา</a>
+      <a href="#faq">คำถามพบบ่อย</a>
+    </nav>
+  </div></div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">หน่วยบริหารงานบุคคล · คณะพยาบาลศาสตร์ มช.</div>
+      <h1>เส้นทางการขอ<br>ตำแหน่งทางวิชาการ</h1>
+      <p class="lead">ตามข้อบังคับมหาวิทยาลัยเชียงใหม่ ว่าด้วยหลักเกณฑ์และวิธีการพิจารณาแต่งตั้ง ผศ. รศ. และ ศ. พ.ศ. 2569</p>
+    </div>
+    <div class="focus">
+      <div data-for="applicant">
+        <h3>สิ่งที่อาจารย์ต้องทำ</h3>
+        <ol>
+          <li>ตรวจคุณสมบัติด้านเวลาและเกณฑ์ผลงาน</li>
+          <li>ยื่นบันทึกขั้นตอน 1 และ 2 เพื่อรับการประเมินการสอน</li>
+          <li>แก้ไขตามผลประเมิน เตรียมชุดเอกสาร 9 รายการ</li>
+          <li>ยื่นบันทึกขั้นตอน 3 และ Submit ใน CMU-MIS</li>
+        </ol>
+      </div>
+      <div data-for="hr">
+        <h3>สิ่งที่เจ้าหน้าที่ต้องทำ</h3>
+        <ol>
+          <li>รับเรื่อง ตรวจเอกสารและคุณสมบัติ ภายใน 2 วัน</li>
+          <li>เสนอคณบดี ออกคำสั่งกรรมการประเมิน</li>
+          <li>ประสานกรรมการ แจ้งผลผู้ขอภายใน 2 วัน</li>
+          <li>ตรวจครบก่อนเสนอคณบดีลงนาม ส่งกองฯ ภายใน 30 วัน</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="deadline" role="note">
+    <div class="n"><span id="dlDays">–</span><small>วัน</small></div>
+    <div class="t"><b>เส้นตายบทเฉพาะกาล 25 พฤศจิกายน 2569</b> · บทความในวารสารระดับชาติที่เผยแพร่ตามหลักเกณฑ์เดิม ใช้ยื่นได้ถ้ายื่นภายในวันนี้ หลังจากนั้นใช้เกณฑ์ใหม่ (รศ./ศ. ต้องเป็น TCI กลุ่ม 1) <span class="ref">ข้อ 69</span></div>
+  </div>
+
+  <!-- ===== 01 ภาพรวม ===== -->
+  <section class="block" id="overview">
+    <div class="sec-head"><div class="sec-num">01</div><h2>ภาพรวมเส้นทาง 3 ช่วง</h2><p>เริ่มจากการประเมินการสอนในคณะ ส่งต่อมหาวิทยาลัย จนถึงการอนุมัติแต่งตั้ง</p></div>
+    <div class="grid-3">
+      <div class="card phase s-item">
+        <div class="k">ช่วง A · ระดับคณะ</div>
+        <h3>ประเมินการสอนและเอกสารการสอน</h3>
+        <ol>
+          <li>ยื่นขอรับการประเมินการสอน (บันทึก 1)</li>
+          <li>ส่งเอกสารประกอบการสอน/คำสอน (บันทึก 2)</li>
+          <li>กรรมการประเมิน → แจ้งผล → แก้ไข</li>
+          <li>ยื่นเสนอขอตำแหน่ง + Submit CMU-MIS (บันทึก 3)</li>
+        </ol>
+        <div class="meta"><span class="time">≈ 1.5–3 เดือน</span></div>
+        <a class="more" href="#faculty">ดูขั้นตอน →</a>
+      </div>
+      <div class="card phase s-item">
+        <div class="k">ช่วง B · ระดับมหาวิทยาลัย</div>
+        <h3>พิจารณาผลงาน 9 ขั้นตอน</h3>
+        <ol>
+          <li>กองทรัพยากรมนุษย์ตรวจ ก.พ.อ.03</li>
+          <li>กพว. ตั้ง/ทาบทามผู้ทรงคุณวุฒิ</li>
+          <li>ผู้ทรงคุณวุฒิประเมินผลงานและจริยธรรม</li>
+          <li>กพว. พิจารณาผลการประเมิน</li>
+        </ol>
+        <div class="meta"><span class="time">ผศ./รศ. ≈ 4–8 เดือน</span><span class="time">ศ. ≈ 5–10 เดือน</span></div>
+        <a class="more" href="#university">ดูขั้นตอน →</a>
+      </div>
+      <div class="card phase s-item">
+        <div class="k">ช่วง C · อนุมัติแต่งตั้ง</div>
+        <h3>สภามหาวิทยาลัยอนุมัติ</h3>
+        <ol>
+          <li>สภาวิชาการให้ความเห็น</li>
+          <li>สภามหาวิทยาลัยอนุมัติ</li>
+          <li>ผศ./รศ.: อธิการบดีออกคำสั่ง</li>
+          <li>ศ.: ก.พ.อ. → รัฐมนตรี → โปรดเกล้าฯ</li>
+        </ol>
+        <div class="meta"><span class="reg">ผศ./รศ. มีผลวันที่หัวหน้าส่วนงานลงนาม · ข้อ 40</span></div>
+        <a class="more" href="#outcome">ดูผลการอนุมัติ →</a>
+      </div>
+    </div>
+    <div class="legend" style="margin-top:18px">
+      <span class="small muted"><span class="time">2 วัน</span> เป้าหมายการให้บริการของหน่วยงาน (ไม่ใช่ข้อบังคับ)</span>
+      <span class="small muted"><span class="reg">ข้อ 40</span> กำหนดโดยข้อบังคับ มช. 2569</span>
+    </div>
+  </section>
+
+  <!-- ===== 02 Swimlane ===== -->
+  <section class="block" id="faculty">
+    <div class="sec-head"><div class="sec-num">02</div><h2>ขั้นตอนระดับคณะ</h2><p>คลิกแต่ละกล่องเพื่อดูรายละเอียด เส้นเชื่อมมีสีตามผู้ส่งต่อ เส้นประคือการส่งต่อเนื่องของผู้ขอ</p></div>
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+  <!-- ===== 03 ระดับมหาวิทยาลัย ===== -->
+  <section class="block" id="university">
+    <div class="sec-head"><div class="sec-num">03</div><h2>ขั้นตอนระดับมหาวิทยาลัย</h2><p>หลังคณะส่งเรื่อง กองทรัพยากรมนุษย์และคณะกรรมการพิจารณาตำแหน่งทางวิชาการ (กพว.) ดำเนินการต่อ</p></div>
+    <div class="road" id="road"></div>
+    <span class="council" id="outcome">สภาวิชาการ → สภามหาวิทยาลัย</span>
+    <div class="outcome">
+      <div class="card pad s-item">
+        <h3>อนุมัติ ผศ., รศ.</h3>
+        <ul class="muted">
+          <li>พนักงานมหาวิทยาลัย: อธิการบดีออกคำสั่งแต่งตั้ง ระบุสาขาวิชา</li>
+          <li>ข้าราชการ: เสนอ ส.ก.อ. กำหนดตำแหน่งและเงินประจำตำแหน่ง</li>
+          <li>มีผลตั้งแต่วันที่หัวหน้าส่วนงานลงนามรับรอง แต่ไม่ก่อนวันที่คุณสมบัติและผลงานครบ <span class="ref">ข้อ 40</span></li>
+        </ul>
+      </div>
+      <div class="card pad s-item">
+        <h3>อนุมัติ ศ.</h3>
+        <ul class="muted">
+          <li>สภามหาวิทยาลัยเสนอ ก.พ.อ. พร้อมคำสั่งตั้งผู้ทรงฯ ผลการประเมิน ผลงาน และแบบคำขอ</li>
+          <li>รัฐมนตรีเสนอนายกรัฐมนตรีเพื่อนำความกราบบังคมทูล ทรงพระกรุณาโปรดเกล้าฯ</li>
+          <li>มหาวิทยาลัยออกคำสั่งหลังได้รับพระบรมราชโองการ <span class="ref">ข้อ 43</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">ไม่ผ่านการพิจารณา: ขอทบทวนได้ไม่เกิน <b>2 ครั้ง</b> ครั้งละภายใน <b>90 วัน</b> นับจากวันที่รับทราบมติ ถ้าเพิ่มหรือแก้ผลงานถือเป็นการยื่นใหม่ <span class="ref">ข้อ 66–68</span></div>
+  </section>
+
+  <!-- ===== 04 เกณฑ์ ===== -->
+  <section class="block" id="criteria">
+    <div class="sec-head"><div class="sec-num">04</div><h2>คุณสมบัติและเกณฑ์</h2><p>เลือกตำแหน่งเพื่อดูเงื่อนไขด้านเวลา การสอน และผลงาน ตามข้อบังคับ มช. 2569</p></div>
+    <div class="tabs" role="tablist" aria-label="ตำแหน่ง">
+      <button type="button" role="tab" aria-selected="true" data-rank="asst">ผู้ช่วยศาสตราจารย์</button>
+      <button type="button" role="tab" aria-selected="false" data-rank="assoc">รองศาสตราจารย์</button>
+      <button type="button" role="tab" aria-selected="false" data-rank="prof">ศาสตราจารย์</button>
+      <button type="button" role="tab" aria-selected="false" data-rank="special">ตำแหน่งเฉพาะด้าน</button>
+    </div>
+    <div id="critPanel"></div>
+    <div class="grid-2" style="margin-top:16px">
+      <div class="card pad crit s-item">
+        <div class="lbl">การเผยแพร่งานวิจัย</div>
+        <ul>
+          <li>วารสารระดับชาติ: TCI กลุ่ม 1 หรือ 2 (รศ./ศ. ต้อง TCI กลุ่ม 1 เว้นสังคมศาสตร์/มนุษยศาสตร์)</li>
+          <li>นานาชาติ: ERIC, MathSciNet, PubMed, Scopus, Web of Science (SCIE/SSCI/AHCI), JSTOR, Project Muse</li>
+          <li>วันที่เผยแพร่ = วันที่ได้ DOI จาก Crossref (ไม่มี DOI ใช้วันที่ระบุ Volume และเลขหน้าครบ)</li>
+          <li>Proceedings ต้องเป็นฉบับเต็ม จัดร่วมกันอย่างน้อย 3 สถาบัน</li>
+        </ul>
+        <span class="ref">เอกสารแนบท้าย หน้า 11–12</span>
+      </div>
+      <div class="card pad crit s-item">
+        <div class="lbl">จริยธรรมและผลงานที่ใช้ไม่ได้</div>
+        <ul>
+          <li>ห้ามลอกเลียน สร้างข้อมูลเท็จ บิดเบือนข้อมูล ตีพิมพ์ซ้ำซ้อน หรือคัดลอกงานตนเองโดยไม่อ้างอิง</li>
+          <li>วิจัยในคน/สัตว์ ต้องแนบหลักฐานรับรองจริยธรรมการวิจัย</li>
+          <li>ใช้ไม่ได้: วิทยานิพนธ์ (เว้นต่อยอดชัดเจน) และผลงานที่ใช้ขอตำแหน่งประเภทอื่นมาแล้ว</li>
+          <li>ผิดจริยธรรม: งดพิจารณาและห้ามขอ 5–10 ปี หากพบหลังแต่งตั้งจะถูกถอดถอน</li>
+        </ul>
+        <span class="ref">ข้อ 21, 63–65</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 05 แบบฟอร์ม ===== -->
+  <section class="block" id="forms">
+    <div class="sec-head"><div class="sec-num">05</div><h2>แบบฟอร์ม</h2>
+      <p data-for="applicant">ดาวน์โหลดแบบฟอร์มฉบับล่าสุดที่หน่วยบริหารงานบุคคลจัดเตรียมไว้</p>
+      <p data-for="hr">ดาวน์โหลด และอัปโหลดแบบฟอร์มฉบับใหม่ให้อาจารย์ใช้</p></div>
+
+    <div class="form-list" id="formList"><div class="no-result">กำลังโหลดรายการแบบฟอร์ม…</div></div>
+
+    <div class="admin" data-for="hr" id="admin">
+      <h3>จัดการแบบฟอร์ม</h3>
+      <p class="small muted">ไฟล์จะถูกบันทึกลงโฟลเดอร์ <b>forms</b> ของคู่มือนี้โดยตรง อาจารย์เห็นฉบับใหม่เมื่อเปิดคู่มือจากโฟลเดอร์เดียวกัน (เช่น ไดรฟ์ที่แชร์ไว้) ต้องใช้ Chrome หรือ Edge บนคอมพิวเตอร์</p>
+      <div class="status" id="fsStatus"><i></i><span>ยังไม่ได้เชื่อมต่อโฟลเดอร์</span></div>
+      <button type="button" class="btn primary" id="fsConnect">เชื่อมต่อโฟลเดอร์คู่มือ</button>
+      <div id="addForm" class="hidden" style="margin-top:18px">
+        <div class="lbl small muted" style="font-weight:500">เพิ่มแบบฟอร์มใหม่</div>
+        <div class="fgrid">
+          <div class="field"><label for="nfTitle">ชื่อแบบฟอร์ม</label><input id="nfTitle" placeholder="เช่น แบบ ก.พ.อ.03 (ผศ.)"></div>
+          <div class="field"><label for="nfGroup">หมวด</label>
+            <select id="nfGroup"><option>บันทึกข้อความ</option><option>แบบฟอร์มประกอบ</option><option>ข้อบังคับและประกาศ</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label for="nfDesc">คำอธิบาย (ไม่บังคับ)</label><input id="nfDesc"></div>
+          <div class="field"><label for="nfFile">ไฟล์</label><input id="nfFile" type="file"></div>
+        </div>
+        <button type="button" class="btn primary" id="nfAdd" style="margin-top:12px">อัปโหลดและเพิ่มในรายการ</button>
+      </div>
+      <p class="small muted hidden" id="fsUnsupported" style="margin-top:12px">เบราว์เซอร์นี้อัปโหลดไม่ได้ ให้เปิดด้วย Chrome หรือ Edge หรือคัดลอกไฟล์ไปไว้ในโฟลเดอร์ forms แล้วแก้รายการในไฟล์ forms/forms.js</p>
+    </div>
+
+    <h3 class="sub" style="margin-top:44px">แบบ ก.พ.อ.03 · ใครกรอกส่วนไหน</h3>
+    <div class="parts" id="parts"></div>
+    <div class="note">ตำแหน่งเฉพาะด้านใช้ <b>ก.พ.อ.06</b> (แบบคำขอ) และ <b>ก.พ.อ.07</b> (แบบเสนอแต่งตั้ง) <span class="ref">ข้อ 47, 61</span></div>
+
+    <h3 class="sub" style="margin-top:36px">แบบแสดงหลักฐานการมีส่วนร่วม</h3>
+    <div class="note warn">ยื่นทุกผลงาน ยกเว้นงานที่ทำคนเดียว · ลงนามแล้ว<b>แก้ไขไม่ได้</b> · ระบุไม่ตรงความจริงถือว่าผิดจริยธรรม</div>
+    <div class="grid-2">
+      <div class="card pad s-item">
+        <div class="lbl small muted" style="font-weight:500">กรณีที่ 1</div>
+        <h3 class="sub" style="margin-top:4px">งานวิจัยที่ตีพิมพ์</h3>
+        <ul class="muted">
+          <li>เลือกสถานะ: First / Corresponding / Co-author</li>
+          <li>ไม่แบ่งร้อยละ แต่บรรยายบทบาทครบ 7 หัวข้อ</li>
+          <li>ลงนาม: ผู้ขอ + FA + CA</li>
+        </ul>
+        <div class="roles7">
+          <div><b>ก</b>ความคิดริเริ่ม สมมุติฐาน</div><div><b>ข</b>ปฏิบัติการวิจัย ออกแบบ</div><div><b>ค</b>เก็บ วิเคราะห์ แปรผล</div>
+          <div><b>ง</b>วิพากษ์ผล</div><div><b>จ</b>เขียน Manuscript</div><div><b>ฉ</b>สนับสนุนทุน เครื่องมือ</div><div><b>ช</b>อื่น ๆ</div>
+        </div>
+      </div>
+      <div class="card pad s-item">
+        <div class="lbl small muted" style="font-weight:500">กรณีที่ 2</div>
+        <h3 class="sub" style="margin-top:4px">รายงานวิจัยฉบับสมบูรณ์ / ผลงานกลุ่มอื่น</h3>
+        <ul class="muted">
+          <li>ระบุร้อยละและบทบาทของผู้ร่วมงานทุกคน</li>
+          <li>ผู้ขอมีส่วนร่วมไม่น้อยกว่า 50%</li>
+          <li>ผู้ร่วมงานทุกคนลงนาม</li>
+        </ul>
+        <div class="table-wrap" style="margin-top:12px">
+          <table style="min-width:0">
+            <thead><tr><th>ผู้ร่วมงาน</th><th>ร้อยละ</th><th>บทบาท</th></tr></thead>
+            <tbody>
+              <tr><td>ผู้ขอ</td><td>50</td><td>คิดหัวข้อ เขียนโครงร่าง วิเคราะห์ เขียนต้นฉบับ</td></tr>
+              <tr><td>ผู้ร่วม 1</td><td>25</td><td>เก็บและวิเคราะห์ข้อมูล</td></tr>
+              <tr><td>ผู้ร่วม 2</td><td>25</td><td>ตรวจสอบต้นฉบับ</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 06 Checklist ===== -->
+  <section class="block" id="checklist">
+    <div class="sec-head"><div class="sec-num">06</div><h2>Checklist</h2><p>ติ๊กได้ ระบบจำค่าไว้ในเบราว์เซอร์เครื่องนี้</p></div>
+    <div id="checklists"></div>
+  </section>
+
+  <!-- ===== 07 บันทึกข้อความ ===== -->
+  <section class="block" id="memos">
+    <div class="sec-head"><div class="sec-num">07</div><h2>บันทึกข้อความ 3 ขั้นตอน</h2><p>เรียนคณบดีคณะพยาบาลศาสตร์ · สาขาวิชาพยาบาลศาสตร์ รหัส 3701 ระบุอนุสาขาด้วย</p></div>
+    <div class="grid-3" id="memoGrid"></div>
+  </section>
+
+  <!-- ===== 08 วางแผน ===== -->
+  <section class="block" id="planner">
+    <div class="sec-head"><div class="sec-num">08</div><h2>วางแผนเวลา</h2><p>ตรวจระยะเวลาดำรงตำแหน่งขั้นต่ำ และประมาณการไทม์ไลน์ถึงสภามหาวิทยาลัย</p></div>
+    <div class="grid-2">
+      <div class="card pad">
+        <h3 class="sub">ตรวจคุณสมบัติด้านเวลา</h3>
+        <div class="fgrid">
+          <div class="field"><label for="elRank">ตำแหน่งที่จะขอ</label>
+            <select id="elRank"><option value="asst">ผู้ช่วยศาสตราจารย์</option><option value="assoc">รองศาสตราจารย์</option><option value="prof">ศาสตราจารย์</option></select></div>
+          <div class="field" id="elDegWrap"><label for="elDeg">วุฒิการศึกษา</label>
+            <select id="elDeg"><option value="phd">ปริญญาเอก</option><option value="ms">ปริญญาโท</option></select></div>
+          <div class="field"><label for="elDate" id="elDateLbl">วันที่ได้รับแต่งตั้งเป็นอาจารย์</label><input id="elDate" type="date"></div>
+        </div>
+        <div class="result" id="elResult" aria-live="polite"><span class="muted">กรอกวันที่เพื่อดูผล</span></div>
+        <p class="ref" style="margin-top:12px">ผศ.: เวลาเป็นอาจารย์สถาบันอื่นนับเต็ม อาจารย์พิเศษ/ปฏิบัติวิชาชีพนับ 3 ใน 4 · ประเมิน ณ วันที่ส่วนงานรับเรื่อง · ข้อ 26, 29, 32, 36</p>
+      </div>
+      <div class="card pad">
+        <h3 class="sub">ประมาณการไทม์ไลน์</h3>
+        <div class="fgrid">
+          <div class="field"><label for="tlStart">วันที่ยื่นบันทึกขั้นตอน 1</label><input id="tlStart" type="date"></div>
+          <div class="field"><label for="tlRank">ตำแหน่ง</label><select id="tlRank"><option value="ar">ผศ. / รศ.</option><option value="p">ศ.</option></select></div>
+        </div>
+        <div class="totals" id="tlTotal"></div>
+        <p class="ref" style="margin-top:12px">ประมาณจากเป้าหมายการให้บริการในแผนภาพของหน่วยงาน ไม่ใช่ข้อบังคับ ระยะจริงขึ้นกับรอบประชุมและการแก้ไขเอกสาร</p>
+      </div>
+    </div>
+    <div class="card pad" id="gantt" style="margin-top:16px"></div>
+  </section>
+
+  <!-- ===== 09 FAQ ===== -->
+  <section class="block" id="faq">
+    <div class="sec-head"><div class="sec-num">09</div><h2>คำถามพบบ่อย</h2></div>
+    <div id="faqList" style="border-top:1px solid var(--line)"></div>
+    <div class="no-result hidden" id="noResult">ไม่พบเนื้อหาที่ตรงกับคำค้น</div>
+  </section>
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div>
+      <h3>ติดต่อ</h3>
+      <div>หน่วยบริหารงานบุคคล คณะพยาบาลศาสตร์ มช.</div>
+      <div>นางเบญจพร จุฑาโรจน์</div>
+      <div><a href="mailto:benjaporn.chu@cmu.ac.th">benjaporn.chu@cmu.ac.th</a> · <a href="tel:053949071">0 53 949071</a></div>
+    </div>
+    <div class="small">
+      <h3>แหล่งอ้างอิง</h3>
+      ข้อบังคับ มช. ว่าด้วยหลักเกณฑ์และวิธีการพิจารณาแต่งตั้งและถอดถอน ผศ. รศ. ศ. พ.ศ. 2569 (ประกาศ 18 ก.ค. 2569) · บันทึกขั้นตอน 1–3 · แบบแสดงหลักฐานการมีส่วนร่วม 2569 · แผนภาพของหน่วยบริหารงานบุคคล
+      เกณฑ์เอกสารประกอบการสอน/คำสอน และการประเมินผลการสอน อยู่ในประกาศมหาวิทยาลัยแยกต่างหาก (ข้อ 9)
+    </div>
+  </div>
+</footer>
+
+<dialog class="drawer" id="drawer" aria-labelledby="drTitle">
+  <div class="dr-head">
+    <div><div class="k" id="drSeq"></div><h3 id="drTitle"></h3></div>
+    <button type="button" class="x" id="drClose" aria-label="ปิด">×</button>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  "use strict";
+  var VIEW = document.documentElement.getAttribute("data-view") || "applicant";
+
+  /* ======================= ข้อมูล ======================= */
+  var LANES = [
+    { key: "app", name: "ผู้ขอตำแหน่ง" }, { key: "head", name: "หัวหน้าสาขา" }, { key: "hr", name: "HR FON" },
+    { key: "com", name: "กรรมการประเมิน" }, { key: "dean", name: "คณบดี" }
+  ];
+  var LANE_NAME = { uni: "มหาวิทยาลัย" };
+  LANES.forEach(function (l) { LANE_NAME[l.key] = l.name; });
+
+  // ขั้นตอนระดับคณะ (จากแผนภาพ Timeline ของหน่วยบริหารงานบุคคล) เรียงตามลำดับ
+  var FACULTY = [
+    { lane: "app", row: 1, title: "ยื่นขอรับการประเมินการสอน + กรอกประวัติใน CMU-MIS", sub: "จัดส่งผลงาน (ยังไม่ Submit)", form: "memo1",
+      what: ["ทำบันทึกข้อความ “ขอรับการประเมินการสอนเพื่อขอตำแหน่งทางวิชาการ” (บันทึกขั้นตอน 1)", "ระบุกระบวนวิชา หน่วยกิต จำนวนวิชา วัน เวลา ห้องเรียน", "กรอกประวัติและผลงานใน CMU-MIS แต่ยังไม่กด Submit"],
+      docs: ["บันทึกขั้นตอน 1", "ประมวลรายวิชา", "แผนการสอน", "ตารางสอน", "เอกสารการสอน"], next: "หัวหน้าสาขาพิจารณา",
+      app: "เลือกคาบที่สอนจริงและแจ้งล่วงหน้าพอให้แต่งตั้งกรรมการทัน ชั่วโมงสอนรวมต้องไม่น้อยกว่า 3 หน่วยกิต หรือ 45 ชั่วโมง",
+      hr: "ลงทะเบียนรับเรื่อง เปิดแฟ้มติดตาม และตรวจว่าแนบเอกสารครบ 4 รายการ" },
+    { lane: "head", row: 1, title: "พิจารณาเพิ่มเติม", time: "2 วัน",
+      what: ["พิจารณาความเหมาะสมของวิชาและคุณสมบัติเบื้องต้น", "ถ้าต้องการข้อมูลเพิ่ม ส่งกลับผู้ขอ"], next: "อนุมัติ" },
+    { lane: "head", row: 2, title: "อนุมัติ", what: ["หัวหน้าสาขาอนุมัติให้ขอรับการประเมิน"], next: "ส่ง HR FON ภายใน 2 วัน" },
+    { lane: "hr", row: 1, title: "ตรวจสอบเอกสาร", time: "2 วัน",
+      what: ["ตรวจความครบถ้วนของบันทึกและเอกสารแนบ", "ตรวจระยะเวลาดำรงตำแหน่งเบื้องต้น (ข้อ 26 / 29 / 32)"], next: "เสนอคณบดี",
+      hr: "ถ้าคุณสมบัติด้านเวลายังไม่ครบ แจ้งผู้ขอว่าต้องใช้วิธีพิเศษ (ผู้ทรงฯ ต้องเห็นเป็นเอกฉันท์)" },
+    { lane: "hr", row: 2, title: "เสนอคณบดี ผ่านรองคณบดีฝ่าย HRM", sub: "พิจารณากรรมการประเมิน", time: "2 วัน",
+      what: ["เสนอรายชื่อคณะกรรมการประเมินการสอนและเอกสารประกอบการสอน/คำสอน"], next: "เสนอคำสั่งแต่งตั้ง" },
+    { lane: "hr", row: 3, title: "เสนอคำสั่งแต่งตั้งกรรมการประเมิน", time: "2 วัน",
+      what: ["จัดทำคำสั่งแต่งตั้งคณะกรรมการประเมิน"], next: "เตรียมเอกสารส่งกรรมการ",
+      hr: "วันที่ในคำสั่งเป็นจุดเริ่มนับ “ภายใน 30 วัน” ของกรรมการ ควรบันทึกไว้ในแฟ้มติดตาม" },
+    { lane: "app", row: 3, title: "ส่งเอกสารประกอบการสอน/เอกสารคำสอน", sub: "เพื่อประเมินเอกสารการสอน", dashed: true, form: "memo2",
+      what: ["ทำบันทึกข้อความ “ขอส่งเอกสารประกอบการสอน/เอกสารคำสอน” (บันทึกขั้นตอน 2)", "อ้างถึงวิชาที่ขอประเมินการสอนแล้ว ระบุวิชาและหน่วยกิตของเอกสาร"],
+      docs: ["บันทึกขั้นตอน 2", "เอกสารประกอบการสอน หรือเอกสารคำสอน"], next: "HR รวบรวมส่งกรรมการ",
+      app: "เอกสารต้องได้ใช้สอนแล้ว มีการอ้างอิงแหล่งที่มา และครอบคลุมทุกหัวข้อที่สอน" },
+    { lane: "hr", row: 4, title: "เตรียมเอกสารประเมิน ส่งให้คณะกรรมการ", sub: "การสอน + เอกสารประกอบการสอน/คำสอน", time: "2 วัน",
+      what: ["รวบรวมเอกสารการสอนและเอกสารประกอบการสอน/คำสอน ส่งคณะกรรมการ", "แนบแบบประเมินและคำสั่งแต่งตั้ง"], next: "กรรมการประเมิน" },
+    { lane: "com", row: 4, title: "ประเมินการสอนและเอกสารประกอบการสอน/คำสอน",
+      what: ["สังเกตการสอนตามวันเวลาที่ขอ", "ประเมินการถ่ายทอดความรู้ การประเมินผล และความสอดคล้องกับ CLO", "ผศ. แสดงความชำนาญ · รศ. แสดงความชำนาญพิเศษ"], next: "ประชุมสรุปผล" },
+    { lane: "hr", row: 5, title: "นัดประชุม/เชิญกรรมการ", sub: "ประเมินการสอนและเอกสาร",
+      what: ["นัดวันประชุม ส่งหนังสือเชิญ และเตรียมแบบสรุปผล"], next: "กรรมการประชุมสรุปผล" },
+    { lane: "com", row: 5, title: "ประชุมคณะกรรมการเพื่อสรุปผลการประเมิน", time: "ภายใน 30 วัน นับจากคำสั่ง",
+      what: ["สรุปผลการประเมินการสอนและเอกสารประกอบการสอน/คำสอน"], next: "HR แจ้งผลผู้ขอ" },
+    { lane: "app", row: 6, title: "รับทราบผลการประเมิน แก้ไขก่อนส่งกองทรัพยากรมนุษย์", time: "HR แจ้งผลภายใน 2 วัน",
+      what: ["แก้ไขเอกสารตามข้อเสนอแนะของกรรมการ", "เตรียมชุดเอกสารเสนอขอตำแหน่ง (ดู Checklist)"], next: "Submit ในระบบ CMU-MIS",
+      app: "ให้ผู้ร่วมงานลงนามแบบแสดงหลักฐานการมีส่วนร่วมให้ครบก่อน Submit เพราะลงนามแล้วแก้ไขไม่ได้" },
+    { lane: "dean", row: 6, title: "ลงนามเอกสารประกอบการขอตำแหน่ง", time: "HR เสนอลงนามภายใน 2 วัน",
+      what: ["คณบดี (หัวหน้าส่วนงาน) ลงนามรับรองใน ก.พ.อ.03 ส่วนที่ 2 และเอกสารประกอบ"], next: "ส่งกองทรัพยากรมนุษย์",
+      hr: "วันที่หัวหน้าส่วนงานลงนามรับรองคือวันที่ใช้ประเมินคุณสมบัติ และเป็นวันที่ ผศ./รศ. มีผล (ข้อ 36, 40) ตรวจความครบถ้วนให้เสร็จก่อนเสนอลงนาม" },
+    { lane: "app", row: 7, title: "Submit ในระบบ CMU-MIS", sub: "พร้อมบันทึกขั้นตอน 3 ขอเสนอแต่งตั้ง", form: "memo3",
+      what: ["กด Submit ใน CMU-MIS", "ยื่นบันทึกขั้นตอน 3 พร้อมชุดเอกสาร 9 รายการ"],
+      docs: ["บันทึกขั้นตอน 3", "ก.พ.อ.03 จำนวน 9 ชุด", "ผลงาน + หลักฐานการมีส่วนร่วม + จริยธรรมการวิจัย (ฉบับจริง 1 + สำเนา 5)"], next: "HR ส่งกองทรัพยากรมนุษย์" },
+    { lane: "hr", row: 7, title: "ส่งเรื่องถึงกองทรัพยากรมนุษย์", time: "ภายใน 30 วัน",
+      what: ["ส่งเรื่องเสนอขอตำแหน่งไปมหาวิทยาลัย"], next: "เข้าสู่ขั้นตอนระดับมหาวิทยาลัย",
+      hr: "บันทึกวันที่ส่งและเลขที่หนังสือ เพื่อติดตามสถานะกับกองทรัพยากรมนุษย์" }
+  ];
+  // เส้นเชื่อม [จาก, ไป, เส้นประ] (ลำดับเริ่มที่ 0)
+  var LINKS = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [0, 6, true], [5, 7], [6, 7, true], [7, 8], [7, 9], [8, 10], [9, 10], [9, 11], [9, 12], [11, 13], [12, 14], [13, 14]];
+
+  var UNIVERSITY = [
+    { n: "1", lane: "app", who: "ผู้เสนอขอ", title: "ยื่นเรื่องเสนอขอตำแหน่ง", items: ["บันทึกเสนอขอ", "แบบ ก.พ.อ.03", "ผลการประเมินการสอน", "ผลงานทางวิชาการ"],
+      app: "ยื่นผ่านระบบอิเล็กทรอนิกส์ (CMU-MIS) พร้อมแบบแสดงการมีส่วนร่วมและแบบสรุปความเชี่ยวชาญ", hr: "ตรวจชุดเอกสารด้วย Checklist ของเจ้าหน้าที่ก่อนเสนอต่อ", ref: "ข้อ 12, 44" },
+    { n: "2", lane: "head", who: "หัวหน้าภาควิชา/สาขา", title: "ตรวจสอบคุณสมบัติ และ ก.พ.อ.03", items: ["ก.พ.อ.03 ส่วนที่ 2 ระบุคุณสมบัติ “ครบถ้วน / ไม่ครบถ้วน”"] },
+    { n: "3", lane: "dean", who: "คณบดี", title: "สำนักงานเลขานุการคณะรับเรื่อง", items: ["คณบดีให้ความเห็น “เข้าข่าย / ไม่เข้าข่าย”"],
+      hr: "วันที่ส่วนงานรับเรื่องคือวันที่ใช้ประเมินคุณสมบัติ", ref: "ข้อ 36" },
+    { n: "อนุ", sub: true, lane: "dean", who: "อนุ กพว.ประจำคณะ", title: "ตรวจสอบเอกสาร", items: ["ตรวจความถูกต้องของเอกสารและผลงานก่อนเสนอคณะกรรมการประจำคณะ"] },
+    { n: "4", lane: "dean", who: "คณบดี", title: "เสนอคณะกรรมการประจำคณะ", items: ["เสนอ กก.ประจำคณะเห็นชอบ", "เสนอรายชื่อผู้ทรงคุณวุฒิ (ผศ., รศ.)"] },
+    { n: "5", lane: "uni", who: "กองทรัพยากรมนุษย์", title: "รับเรื่องและตรวจสอบ ก.พ.อ.03", time: "7 วัน", items: ["กจน. รับเรื่อง", "ตรวจสอบ ก.พ.อ.03"],
+      hr: "แผนภาพเดิมระบุ “วันแต่งตั้งฯ” ที่ขั้นนี้ แต่ข้อบังคับ 2569 ข้อ 40 กำหนดให้ ผศ./รศ. มีผลตั้งแต่วันที่หัวหน้าส่วนงานลงนามรับรอง โปรดยืนยันกับกองทรัพยากรมนุษย์" },
+    { n: "6", lane: "uni", who: "ก.พ.ว.", title: "แต่งตั้งคณะกรรมการผู้ทรงคุณวุฒิ", time: "ทาบทาม 45 วัน",
+      items: ["ผศ., รศ.: ประธานและผู้ทรงคุณวุฒิภายนอก 3–5 คน ตำแหน่งไม่ต่ำกว่าที่ขอ", "ศ.: ผู้ทรงฯ จากบัญชีของ ก.พ.อ. เท่านั้น", "กพว. ประเมินผลการสอน (ศ. ไม่มีขั้นนี้)", "รศ./ศ. วิธีที่ 3 (Scopus) ผ่านเกณฑ์แล้วเสนอสภาได้โดยไม่ต้องตั้งผู้ทรงฯ"], ref: "ข้อ 38–39, 41–42" },
+    { n: "7", lane: "uni", who: "ผู้ทรงคุณวุฒิ", title: "พิจารณาผลงานและจริยธรรม", time: "ผศ./รศ. 2–4 เดือน · ศ. 3–6 เดือน",
+      items: ["ประเมินคุณภาพผลงาน (B / A / A+) และจริยธรรม จรรยาบรรณทางวิชาการ", "วิธีพิเศษต้องเห็นเป็นเอกฉันท์"], app: "อาจถูกขอข้อมูลหรือคำชี้แจงเพิ่ม ควรตอบกลับผ่านหน่วยงานโดยเร็ว" },
+    { n: "8", lane: "uni", who: "ประธานผู้ทรงฯ", title: "สรุปผลการประเมิน", items: ["งดประชุม (ผศ./รศ. ผลเป็นเอกฉันท์)", "หรือประชุม (องค์ประชุม ≥ กึ่งหนึ่ง ประชุมออนไลน์ได้)"], ref: "ข้อ 38" },
+    { n: "9", lane: "uni", who: "ก.พ.ว.", title: "ประชุมพิจารณาความเห็นของผู้ทรงคุณวุฒิ", items: ["ลงมติ “สมควร / ไม่สมควร” และยืนยันจริยธรรมตามเกณฑ์", "เสนอสภาวิชาการและสภามหาวิทยาลัย"], ref: "ก.พ.อ.03 ส่วนที่ 4" }
+  ];
+
+  // เอกสารในแต่ละขั้นตอนระดับมหาวิทยาลัย (คีย์ = เลขขั้นใน UNIVERSITY) · id ใช้ผูกกับไฟล์ตัวอย่างใน forms/examples.js
+  var STEP_DOCS = {
+    "1": [
+      { id: "u1-memo3", name: "บันทึกข้อความขอเสนอแต่งตั้ง (บันทึกขั้นตอน 3)" },
+      { id: "u1-kpo03-asst", name: "แบบ ก.พ.อ.03 · ผู้ช่วยศาสตราจารย์", note: "ผู้ขอกรอกส่วนที่ 1 · 9 ชุด" },
+      { id: "u1-kpo03-assoc", name: "แบบ ก.พ.อ.03 · รองศาสตราจารย์", note: "ผู้ขอกรอกส่วนที่ 1 · 9 ชุด" },
+      { id: "u1-kpo03-prof", name: "แบบ ก.พ.อ.03 · ศาสตราจารย์", note: "ผู้ขอกรอกส่วนที่ 1 · 9 ชุด" },
+      { id: "u1-teach", name: "ผลการประเมินการสอน และเอกสารประกอบการสอน/เอกสารคำสอน" },
+      { id: "u1-works", name: "ผลงานทางวิชาการ พร้อมหลักฐานการเผยแพร่", note: "ฉบับจริง 1 + สำเนา 5" },
+      { id: "u1-part", name: "แบบแสดงหลักฐานการมีส่วนร่วม · ตัวอย่างที่กรอกแล้ว", note: "ทุกผลงาน ยกเว้นทำคนเดียว" },
+      { id: "u1-part-blank", name: "แบบแสดงหลักฐานการมีส่วนร่วม · แบบเปล่า" },
+      { id: "u1-ethics", name: "หลักฐานรับรองจริยธรรมการวิจัย", note: "งานวิจัยในคน/สัตว์" },
+      { id: "u1-expert", name: "แบบสรุปความเชี่ยวชาญการขอตำแหน่งทางวิชาการ" },
+      { id: "u1-consent", name: "หนังสือแจ้งความประสงค์เรื่องการรับรู้ข้อมูลเกี่ยวกับตำแหน่งทางวิชาการ" },
+      { id: "u1-check", name: "แบบตรวจสอบเอกสารประกอบการขอตำแหน่งทางวิชาการ" }
+    ],
+    "2": [{ id: "u2-kpo03-2", name: "ก.พ.อ.03 ส่วนที่ 2 · ความเห็นหัวหน้าภาควิชา/สาขา", note: "ครบถ้วน / ไม่ครบถ้วน" }],
+    "3": [
+      { id: "u3-kpo03-2", name: "ก.พ.อ.03 ส่วนที่ 2 · ความเห็นคณบดี", note: "เข้าข่าย / ไม่เข้าข่าย" },
+      { id: "u3-receive", name: "ทะเบียนรับเรื่องของส่วนงาน", note: "วันที่รับเรื่อง = วันที่ใช้ประเมินคุณสมบัติ" }
+    ],
+    "อนุ": [{ id: "ua-check", name: "แบบตรวจสอบเอกสารประกอบการขอตำแหน่ง (ผลการตรวจของอนุ กพว.)" }],
+    "4": [
+      { id: "u4-agenda", name: "วาระและมติคณะกรรมการประจำคณะ" },
+      { id: "u4-experts", name: "รายชื่อผู้ทรงคุณวุฒิที่เสนอ (ผศ., รศ.)" },
+      { id: "u4-letter", name: "หนังสือนำส่งเรื่องถึงกองทรัพยากรมนุษย์" }
+    ],
+    "5": [{ id: "u5-kpo03", name: "แบบ ก.พ.อ.03 ที่ส่วนงานรับรองแล้ว พร้อมชุดเอกสาร" }],
+    "6": [
+      { id: "u6-order", name: "คำสั่งแต่งตั้งคณะกรรมการผู้ทรงคุณวุฒิ" },
+      { id: "u6-invite", name: "หนังสือทาบทามผู้ทรงคุณวุฒิ" },
+      { id: "u6-kpo03-3", name: "ก.พ.อ.03 ส่วนที่ 3 · ผลการประเมินการสอน และ CMUPSF" }
+    ],
+    "7": [{ id: "u7-kpo03-41", name: "ก.พ.อ.03 ส่วนที่ 4 ตอนที่ 1 · ผลการประเมินของผู้ทรงคุณวุฒิ" }],
+    "8": [{ id: "u8-summary", name: "บันทึก/รายงานการประชุมสรุปผลของผู้ทรงคุณวุฒิ" }],
+    "9": [
+      { id: "u9-kpo03-42", name: "ก.พ.อ.03 ส่วนที่ 4 ตอนที่ 2 · มติ กพว." },
+      { id: "u9-kpo03-5", name: "ก.พ.อ.03 ส่วนที่ 5 · มติสภามหาวิทยาลัย" }
+    ]
+  };
+
+  var CRITERIA = {
+    asst: {
+      time: ["ดำรงตำแหน่งอาจารย์และผ่านการทดลองงาน", "ปริญญาเอก ≥ 1 ปี · ปริญญาโท ≥ 4 ปี", "อาจารย์สถาบันอื่นนับรวมได้ · อาจารย์พิเศษ/ปฏิบัติวิชาชีพนับ 3 ใน 4", "ยังไม่ครบ → วิธีพิเศษ"], timeRef: "ข้อ 26, 36–37",
+      teach: ["ชั่วโมงสอนประจำวิชา ≥ 3 หน่วยกิต หรือรวม ≥ 45 ชม.", "แสดงความชำนาญในการสอน (การถ่ายทอด การประเมินผล ความสอดคล้องกับ CLO)", "เอกสารประกอบการสอน หรือเอกสารคำสอน ที่ได้ใช้สอนแล้ว", "CMUPSF Badge ครบ 7 หัวข้อ"], teachRef: "ข้อ 27",
+      routes: [{ name: "ผลงานระดับ B · เลือก 1 ชุด", items: ["งานวิจัย 2 เรื่อง", "หรือ งานวิจัย 1 + ผลงานลักษณะอื่น 1", "หรือ งานวิจัย 1 + ตำรา/หนังสือ 1 เล่ม"] }],
+      cond: ["งานวิจัยอย่างน้อย 1 เรื่องเป็น First หรือ Corresponding author", "รายงานวิจัยฉบับสมบูรณ์/ผลงานไม่ใช่วิจัย ส่วนร่วม ≥ 50%", "วารสารชาติ TCI กลุ่ม 1 หรือ 2", "บทความปริทัศน์ใช้ได้เฉพาะ ผศ./รศ."], workRef: "ข้อ 18, 28" },
+    assoc: {
+      time: ["ดำรงตำแหน่ง ผศ. ≥ 2 ปี", "ยังไม่ครบ → วิธีพิเศษ (เฉพาะวิธีที่ 1 ระดับ A)"], timeRef: "ข้อ 29, 39",
+      teach: ["ชั่วโมงสอน ≥ 3 หน่วยกิต หรือรวม ≥ 45 ชม.", "แสดงความชำนาญพิเศษในการสอน", "CMUPSF Badge ครบ 7 หัวข้อ ระดับผู้เชี่ยวชาญ"], teachRef: "ข้อ 30",
+      routes: [
+        { name: "วิธีที่ 1 · ระดับ B + ตำรา", items: ["วิจัย 2 เรื่อง หรือ วิจัย 1 + ลักษณะอื่น 1", "และ ตำรา/หนังสือ 1 เล่ม", "FA/CA อย่างน้อย 1 เรื่อง"] },
+        { name: "วิธีที่ 2 · ไม่ต้องมีตำรา", items: ["วิจัย ≥ 3 เรื่อง (A ≥ 2 + B ≥ 1)", "หรือ วิจัย A ≥ 2 + ลักษณะอื่น B ≥ 1", "ผลงานระดับ A ≥ 2 เรื่องเป็น FA/CA"] },
+        { name: "วิธีที่ 3 · Scopus (วิทย์/แพทย์)", items: ["Scopus Q1–Q2 ≥ 10 เรื่องหลังได้ ผศ. (FA/CA ≥ 5)", "citation ≥ 500 · h-index ≥ 8", "PI ทุนภายนอก ≥ 5 โครงการ", "ไม่ต้องตั้งผู้ทรงคุณวุฒิ"] }],
+      cond: ["ผลงานก่อนได้ ผศ. เผยแพร่ไม่เกิน 5 ปีก่อนได้ ผศ. ใช้ได้ ≤ 1/3 และต้องมีผลงานใหม่ ≥ 2 เรื่อง", "วารสารชาติต้องเป็น TCI กลุ่ม 1", "ข้อบังคับไม่ได้ระบุสาขาพยาบาลศาสตร์ในกลุ่มวิธีที่ 3 โดยตรง โปรดยืนยันกับกองทรัพยากรมนุษย์"], workRef: "ข้อ 31" },
+    prof: {
+      time: ["ดำรงตำแหน่ง รศ. ≥ 2 ปี", "ยังไม่ครบ → วิธีพิเศษ (เฉพาะวิธีที่ 1 ระดับ A+)"], timeRef: "ข้อ 32, 42",
+      teach: ["แสดงเอกสารหลักฐานการสอน ≥ 3 หน่วยกิต หรือรวม ≥ 45 ชม.", "ไม่มีขั้นประเมินผลการสอน"], teachRef: "ข้อ 33, 41",
+      routes: [
+        { name: "วิธีที่ 1 · ระดับ A + ตำรา", items: ["วิจัยนานาชาติ ≥ 5 เรื่อง หรือ วิจัย 1 + ลักษณะอื่นนานาชาติ รวม ≥ 5", "และ ตำรา/หนังสือ ≥ 1 เล่ม", "FA/CA ≥ 2 เรื่อง"] },
+        { name: "วิธีที่ 2", items: ["วิจัยนานาชาติ ≥ 5 (A+ ≥ 2 + A ≥ 3)", "หรือ วิจัย 1 + ลักษณะอื่น รวม ≥ 5 (A+ ≥ 2 + A ≥ 3)", "หรือ วิจัยระดับ A ≥ 10 เรื่อง (FA/CA ≥ 6)"] },
+        { name: "วิธีที่ 3 · Scopus (วิทย์/แพทย์)", items: ["Scopus Q1–Q2 ≥ 10 เรื่องหลังได้ รศ. (FA/CA ทุกเรื่อง)", "citation ≥ 1,000 · h-index ≥ 18", "PI ทุนภายนอก ≥ 10 โครงการ"] }],
+      cond: ["ผู้ทรงคุณวุฒิจากบัญชีของ ก.พ.อ. เท่านั้น", "ผลงานก่อนได้ รศ. ใช้ได้ ≤ 1/3 เผยแพร่ไม่เกิน 5 ปีก่อนได้ รศ.", "วารสารชาติต้องเป็น TCI กลุ่ม 1"], workRef: "ข้อ 34" }
+  };
+  var SPECIAL_ROWS = [
+    ["การสอน", "B × 1", "B × 2 หรือ A × 1", "A × 2 หรือ A+ × 1", "≥ 50%"],
+    ["รับใช้ท้องถิ่นและสังคม", "B × 1", "B × 2 หรือ A × 1", "A × 2 หรือ A+ × 1", "≥ 50%"],
+    ["นวัตกรรม", "B × 1", "B × 2 หรือ A × 1", "A × 2 หรือ A+ × 1", "≥ 50%"],
+    ["ศาสนา", "B × 1", "B × 2 หรือ A × 1", "A × 2 หรือ A+ × 1", "≥ 80%"],
+    ["สร้างสรรค์สุนทรียะ ศิลปะ", "B × 2", "3 เรื่อง (A 2 + B 1)", "5 เรื่อง (A+ 2 + A 3)", "70 / 80 / 90%"]
+  ];
+  var PARTS = [
+    { n: "ส่วนที่ 1", t: "ประวัติและผลงาน", items: ["ประวัติการศึกษาและการทำงาน", "ภาระงานย้อนหลัง 3 ปี", "ผลงาน + % ส่วนร่วม + บทบาท", "ฐานข้อมูล Citation Impact factor"], who: [["app", "ผู้ขอกรอก"]] },
+    { n: "ส่วนที่ 2", t: "ประเมินคุณสมบัติ", items: ["หัวหน้าภาค/สาขา: ครบถ้วน / ไม่ครบถ้วน", "คณบดี: เข้าข่าย / ไม่เข้าข่าย"], who: [["head", "หัวหน้าสาขา"], ["dean", "คณบดี"]] },
+    { n: "ส่วนที่ 3", t: "การสอน + CMUPSF", items: ["ผลการประเมินการสอน", "CMUPSF Badge ครบ 7 หัวข้อ"], who: [["com", "อนุกรรมการประเมินการสอน"], ["dean", "หัวหน้าส่วนงาน"]] },
+    { n: "ส่วนที่ 4", t: "ประเมินผลงาน", items: ["ผู้ทรงคุณวุฒิประเมินคุณภาพและจริยธรรม", "กพว. สมควร / ไม่สมควร"], who: [["uni", "ผู้ทรงฯ / กพว."]] },
+    { n: "ส่วนที่ 5", t: "มติสภามหาวิทยาลัย", items: ["อนุมัติ / ไม่อนุมัติ", "ระบุสาขาและวันที่แต่งตั้ง"], who: [["uni", "สภามหาวิทยาลัย"]] }
+  ];
+  var CMUPSF = ["การจัดชั้นเรียนแบบผู้เรียนมีส่วนร่วม", "การเรียนรู้นอกชั้นเรียน", "การจัดการเรียนรู้ด้วยเทคโนโลยี", "การผลิตสื่อการสอน", "การออกแบบผลลัพธ์การเรียนรู้", "การออกแบบการจัดการเรียนรู้และประเมินผล", "การปรับปรุงพัฒนาคุณภาพต่อเนื่อง"];
+  var CHECKLISTS = [
+    { id: "app", for: "applicant", title: "ชุดเอกสารเสนอขอตำแหน่ง", ref: "ตามบันทึกขั้นตอน 3", items: [
+      ["เอกสารการสอน", "ระบุรวมชั่วโมง/หน่วยกิต แยกตามกระบวนวิชา"],
+      ["เอกสารประกอบการสอน / เอกสารคำสอน", "ระบุรวมชั่วโมง/หน่วยกิต แยกตามกระบวนวิชา"],
+      ["ผลงานทางวิชาการทุกเรื่อง", "แนบหลักฐานการมีส่วนร่วม และหลักฐานรับรองจริยธรรมการวิจัย", "ฉบับจริง 1 + สำเนา 5"],
+      ["หนังสือหรือตำรา (ถ้ามี)", "หลักฐานการเผยแพร่ และหลักฐานการมีส่วนร่วม", "ฉบับจริง 1 + สำเนา 5"],
+      ["ผลงานในลักษณะอื่น (ถ้ามี)", "หลักฐานการเผยแพร่ และหลักฐานการมีส่วนร่วม", "ฉบับจริง 1 + สำเนา 6"],
+      ["แบบ ก.พ.อ.03", "กรอกส่วนที่ 1 ครบ ลงนามเจ้าของประวัติ FA/CA ลงนามรับรอง", "9 ชุด"],
+      ["หนังสือแจ้งความประสงค์เรื่องการรับรู้ข้อมูลเกี่ยวกับตำแหน่งทางวิชาการ", "", "1 ชุด"],
+      ["แบบตรวจสอบเอกสารประกอบการขอตำแหน่งทางวิชาการ", "", "1 ชุด"],
+      ["แบบสรุปความเชี่ยวชาญการขอตำแหน่งทางวิชาการ", "ความเชี่ยวชาญต้องสอดคล้องกับผลงาน (ข้อ 19)", "1 ชุด"],
+      ["Submit ข้อมูลในระบบ CMU-MIS", "หลังแก้ไขตามผลการประเมินแล้ว"]] },
+    { id: "hr", for: "hr", title: "รายการตรวจก่อนเสนอคณบดีลงนาม", ref: "ข้อ 21, 26–34, 36, 40, 63", items: [
+      ["ระยะเวลาดำรงตำแหน่งครบ ณ วันที่ส่วนงานรับเรื่อง", "ถ้าไม่ครบ ต้องเป็นวิธีพิเศษ"],
+      ["ชั่วโมงสอน ≥ 3 หน่วยกิต หรือ 45 ชม. ในหลักสูตรของมหาวิทยาลัย"],
+      ["มีผลประเมินการสอนและเอกสารประกอบการสอน/คำสอน", "ไม่ใช้กับ ศ."],
+      ["หลักฐาน CMUPSF Badge ครบ 7 หัวข้อ", "ผศ./รศ./เฉพาะด้าน"],
+      ["แบบแสดงหลักฐานการมีส่วนร่วม ครบทุกผลงาน ลงนามครบ", "งานวิจัย: ผู้ขอ + FA + CA · ผลงานอื่น: ทุกคน"],
+      ["หลักฐานรับรองจริยธรรมการวิจัยในมนุษย์"],
+      ["วารสารอยู่ในฐานที่กำหนด และวันที่เผยแพร่ตาม DOI"],
+      ["ผลงานไม่ใช่วิทยานิพนธ์ หรือเคยใช้ขอตำแหน่งประเภทอื่น"],
+      ["ก.พ.อ.03 ส่วนที่ 1 ระบุ % ส่วนร่วม ฐานข้อมูล Citation Impact factor"],
+      ["จำนวนสำเนาครบตามบันทึกขั้นตอน 3"],
+      ["บันทึกวันที่คณบดีลงนาม (วันมีผล ผศ./รศ.) และวันที่ส่งกองทรัพยากรมนุษย์"]] }
+  ];
+  var MEMOS = [
+    { n: "บันทึกขั้นตอน 1", form: "memo1", t: "ขอรับการประเมินการสอนเพื่อขอตำแหน่งทางวิชาการ", when: "ก่อนวันสอนที่ขอรับการประเมิน",
+      fill: ["ชื่อ ตำแหน่ง กลุ่มวิชา สถานะการจ้าง", "ตำแหน่งที่ขอ อนุสาขาวิชา และเดือนที่คาดว่าจะยื่น", "กระบวนวิชา หน่วยกิต จำนวนวิชา", "วัน เวลา ห้องเรียนที่ขอรับการประเมิน"], att: "ประมวลรายวิชา แผนการสอน ตารางสอน เอกสารการสอน" },
+    { n: "บันทึกขั้นตอน 2", form: "memo2", t: "ขอส่งเอกสารประกอบการสอน/เอกสารคำสอน", when: "หลังขอรับการประเมินการสอนแล้ว",
+      fill: ["อ้างถึงการขอประเมินการสอน (วิชา วัน เวลา ห้อง)", "ประเภทเอกสาร: ประกอบการสอน หรือคำสอน", "จำนวนวิชา กระบวนวิชา และหน่วยกิต"], att: "เอกสารประกอบการสอน/เอกสารคำสอน" },
+    { n: "บันทึกขั้นตอน 3", form: "memo3", t: "ขอเสนอแต่งตั้งให้ดำรงตำแหน่งทางวิชาการ", when: "หลังรับทราบผลประเมินและแก้ไขเรียบร้อย",
+      fill: ["ตำแหน่งที่ขอ: ผศ. / รศ. / ศ. / ศ.เชี่ยวชาญพิเศษ", "เอกสารการสอน และเอกสารประกอบการสอน/คำสอน", "ผลงานทีละเรื่อง: ชื่อ แหล่งเผยแพร่ หลักฐานการมีส่วนร่วม จริยธรรมการวิจัย", "หนังสือ/ตำรา และผลงานลักษณะอื่น (ถ้ามี)"], att: "ชุดเอกสาร 9 รายการ (ดู Checklist)" }
+  ];
+  var FAQ = [
+    { q: "ยังดำรงตำแหน่งไม่ครบเวลา ขอได้หรือไม่", a: "ขอได้โดยวิธีพิเศษ ผู้ทรงคุณวุฒิอย่างน้อย 3 คนต้องเห็นเป็นเอกฉันท์ ผศ. ใช้ผลงานระดับ B, รศ. เฉพาะวิธีที่ 1 ระดับ A, ศ. เฉพาะวิธีที่ 1 ระดับ A+ (ข้อ 37, 39, 42)" },
+    { q: "ตำแหน่งมีผลตั้งแต่วันไหน", a: "ผศ./รศ. มีผลตั้งแต่วันที่หัวหน้าส่วนงานลงนามรับรอง แต่ไม่ก่อนวันที่คุณสมบัติและผลงานครบถ้วน (ข้อ 40) ส่วน ศ. มหาวิทยาลัยออกคำสั่งหลังได้รับพระบรมราชโองการ" },
+    { q: "ใช้งานวิจัยจากวิทยานิพนธ์ได้หรือไม่", a: "ไม่ได้ เว้นแต่แสดงได้ว่าวิจัยต่อยอดจนก้าวหน้าชัดเจน ซึ่งพิจารณาเฉพาะส่วนที่เพิ่มขึ้น กรณีวิทยานิพนธ์ของนักศึกษาในที่ปรึกษา ผู้ขอต้องเป็นผู้ริเริ่ม กำกับดูแล และมีบทบาทสำคัญในการวิเคราะห์ (ข้อ 21)", for: "applicant" },
+    { q: "เป็น Co-author ใช้ผลงานได้หรือไม่", a: "งานวิจัยใช้ได้ แต่ต้องบรรยายบทบาทให้ชัด และต้องมีงานที่เป็น First หรือ Corresponding author ตามที่แต่ละตำแหน่งกำหนด ส่วนรายงานวิจัยฉบับสมบูรณ์และผลงานกลุ่มอื่น ผู้ขอต้องมีส่วนร่วม ≥ 50%" },
+    { q: "CMUPSF Badge ต้องมีกี่หัวข้อ", a: "ครบ 7 หัวข้อ: " + CMUPSF.join(" · ") },
+    { q: "ผลการพิจารณาไม่ผ่าน ทำอย่างไร", a: "ขอทบทวนได้ไม่เกิน 2 ครั้ง ครั้งละภายใน 90 วันนับจากวันที่รับทราบมติ ถ้าเพิ่มหรือแก้ผลงานถือเป็นการยื่นใหม่ และยื่นผลงานเดิมซ้ำภายใน 5 ปีใช้ผลประเมินเดิมได้ (ข้อ 45, 66–68)" },
+    { q: "ข้อผิดพลาดที่พบบ่อย", a: "ผู้ร่วมงานลงนามไม่ครบ, ลืมหลักฐานรับรองจริยธรรมการวิจัย, วารสารไม่อยู่ใน TCI กลุ่มที่กำหนด, สำเนาไม่ครบ, Submit ใน CMU-MIS ก่อนแก้ไขตามผลประเมิน, % ส่วนร่วมใน ก.พ.อ.03 ไม่ตรงกับแบบแสดงหลักฐานการมีส่วนร่วม" },
+    { q: "HR เริ่มนับเวลาจากเมื่อไร", a: "ขั้นละ 2 วันนับจากวันที่ได้รับเรื่องจากขั้นก่อนหน้า กรรมการประเมินภายใน 30 วันนับจากวันที่ในคำสั่ง และส่งถึงกองทรัพยากรมนุษย์ภายใน 30 วัน (เป้าหมายการให้บริการ)", for: "hr" },
+    { q: "อัปโหลดแบบฟอร์มแล้ว อาจารย์จะเห็นเมื่อไร", a: "ทันทีที่อาจารย์เปิดหรือรีเฟรชคู่มือจากโฟลเดอร์เดียวกัน ถ้าคัดลอกคู่มือไปไว้ที่อื่น ต้องคัดลอกโฟลเดอร์ forms ไปด้วย", for: "hr" },
+    { q: "บทความวารสารไทยที่ตีพิมพ์ตามเกณฑ์เดิมยังใช้ได้ไหม", a: "ใช้ได้ถ้ายื่นภายใน 25 พฤศจิกายน 2569 ตามบทเฉพาะกาล ข้อ 69" }
+  ];
+
+  /* ======================= เครื่องมือช่วย ======================= */
+  function el(tag, attrs, html) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) { if (k === "class") e.className = attrs[k]; else if (k === "style") e.style.cssText = attrs[k]; else e.setAttribute(k, attrs[k]); });
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function store(key, val) {
+    try {
+      if (val === undefined) return JSON.parse(localStorage.getItem("arm1-" + key));
+      localStorage.setItem("arm1-" + key, JSON.stringify(val));
+    } catch (e) { return null; }
+  }
+  var DAY = 86400000;
+  function addDays(d, n) { return new Date(d.getTime() + n * DAY); }
+  function thDate(d) { return d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric" }); }
+  function iso(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  function tag(k, text) { return '<span class="tag" style="--c:var(--c-' + k + ')"><i></i>' + (text || LANE_NAME[k]) + "</span>"; }
+  function ul(arr) { return "<ul>" + arr.map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>"; }
+  function tip(o) {
+    var t = VIEW === "hr" ? o.hr : o.app;
+    return t ? '<div class="tip"><b>' + (VIEW === "hr" ? "สำหรับเจ้าหน้าที่" : "สำหรับอาจารย์") + ":</b> " + t + "</div>" : "";
+  }
+  var toastEl = document.getElementById("toast"), toastT;
+  function toast(msg) { toastEl.textContent = msg; toastEl.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove("show"); }, 2600); }
+
+  /* ======================= ผู้ใช้ปัจจุบัน ======================= */
+  document.getElementById("whoName").textContent = VIEW === "hr" ? "เจ้าหน้าที่งานบุคคล" : "อาจารย์ผู้ขอตำแหน่ง";
+  document.getElementById("whoDot").style.background = VIEW === "hr" ? "var(--accent)" : "var(--c-app)";
+
+  /* ======================= นับถอยหลัง ======================= */
+  (function () {
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var days = Math.round((new Date(2026, 10, 25) - today) / DAY);
+    document.getElementById("dlDays").textContent = days < 0 ? "0" : days;
+  })();
+
+  /* ======================= Swimlane ======================= */
+  var lanesEl = document.getElementById("lanes");
+  var laneIndex = {}, nodeEls = [];
+  var maxRow = FACULTY.reduce(function (m, s) { return Math.max(m, s.row); }, 0);
+  LANES.forEach(function (l, i) {
+    laneIndex[l.key] = i + 1;
+    lanesEl.appendChild(el("div", { class: "lane-bg", style: "--c:var(--c-" + l.key + ");grid-column:" + (i + 1) + ";grid-row:1 / " + (maxRow + 2) }));
+    lanesEl.appendChild(el("div", { class: "lane-h", style: "--c:var(--c-" + l.key + ");grid-column:" + (i + 1) + ";grid-row:1" }, "<i></i>" + l.name));
+  });
+  FACULTY.forEach(function (s, i) {
+    var b = el("button", { type: "button", class: "node s-item" + (s.dashed ? " dashed" : ""), "aria-haspopup": "dialog",
+      style: "--lc:var(--c-" + s.lane + ");--gc:" + laneIndex[s.lane] + ";--gr:" + (s.row + 1) + ";grid-column:" + laneIndex[s.lane] + ";grid-row:" + (s.row + 1) },
+      '<span class="seq">' + (i + 1) + '</span><span class="lane-label">' + tag(s.lane) + "</span><b>" + s.title + "</b>" +
+      (s.sub ? '<span class="s">' + s.sub + "</span>" : "") + (s.time ? '<span class="time">' + s.time + "</span>" : ""));
+    b.addEventListener("click", function () { openDrawer(i); });
+    lanesEl.appendChild(b);
+    nodeEls.push(b);
+  });
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(SVGNS, "svg");
+  svg.setAttribute("class", "arrows");
+  svg.setAttribute("aria-hidden", "true");
+  lanesEl.insertBefore(svg, lanesEl.firstChild);
+  var arrowsLocked = false; // ระหว่างพิมพ์ ห้ามวาดเส้นใหม่ (สวิมเลนถูกย่อด้วย zoom อยู่)
+  function drawLinks() {
+    if (arrowsLocked) return;
+    var box = lanesEl.getBoundingClientRect();
+    if (!box.width) return;
+    var oneCol = getComputedStyle(lanesEl).gridTemplateColumns.split(" ").length === 1;
+    var defs = "<defs>" + LANES.map(function (l) {
+      return '<marker id="ah-' + l.key + '" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" style="fill:var(--c-' + l.key + ')"/></marker>';
+    }).join("") + "</defs>";
+    var R = nodeEls.map(function (n) {
+      var r = n.getBoundingClientRect();
+      return { l: r.left - box.left, r: r.right - box.left, t: r.top - box.top, b: r.bottom - box.top, cx: (r.left + r.right) / 2 - box.left, cy: (r.top + r.bottom) / 2 - box.top };
+    });
+    var list = oneCol ? FACULTY.slice(1).map(function (_, i) { return [i, i + 1]; }) : LINKS;
+    var out = {}, gap = 3;
+    svg.innerHTML = defs + list.map(function (lk) {
+      var a = R[lk[0]], z = R[lk[1]], sa = FACULTY[lk[0]], sz = FACULTY[lk[1]], d;
+      if (oneCol || sa.lane === sz.lane) {
+        d = "M" + a.cx + " " + a.b + "V" + (z.t - gap);
+      } else if (sz.row > sa.row) {
+        var k = out[lk[0]] = (out[lk[0]] || 0) + 1, right = z.cx > a.cx;
+        var x = a.cx + (right ? 1 : -1) * ((k - 1) * 14 + 10);
+        d = "M" + x + " " + a.b + "V" + Math.min(z.cy, z.t + 22) + "H" + (right ? z.l - gap : z.r + gap);
+      } else {
+        var toR = z.cx > a.cx, sx = toR ? a.r : a.l, ex = toR ? z.l - gap : z.r + gap;
+        var sy = Math.min(a.cy, a.t + 22), ey = Math.min(z.cy, z.t + 22);
+        var mx = Math.abs(laneIndex[sz.lane] - laneIndex[sa.lane]) > 1 ? (toR ? z.l - 14 : z.r + 14) : (sx + ex) / 2;
+        d = Math.abs(sy - ey) < 2 ? "M" + sx + " " + sy + "H" + ex : "M" + sx + " " + sy + "H" + mx + "V" + ey + "H" + ex;
+      }
+      return '<path class="ln' + (lk[2] ? " dash" : "") + '" d="' + d + '" style="stroke:var(--c-' + sa.lane + ')" marker-end="url(#ah-' + sa.lane + ')"/>';
+    }).join("");
+  }
+  if ("ResizeObserver" in window) new ResizeObserver(drawLinks).observe(lanesEl);
+  window.addEventListener("resize", drawLinks);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawLinks);
+  drawLinks();
+
+  var drawer = document.getElementById("drawer");
+  function openDrawer(i) {
+    var s = FACULTY[i];
+    document.getElementById("drSeq").textContent = "ขั้นที่ " + (i + 1) + " จาก " + FACULTY.length;
+    document.getElementById("drTitle").textContent = s.title;
+    var h = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">' + tag(s.lane) + (s.time ? '<span class="time">' + s.time + "</span>" : "") + "</div>";
+    if (s.sub) h += '<p class="muted" style="margin-top:8px">' + s.sub + "</p>";
+    h += "<h4>สิ่งที่ต้องทำ</h4>" + ul(s.what);
+    if (s.docs) h += "<h4>เอกสาร</h4>" + ul(s.docs);
+    var f = s.form && formById(s.form);
+    if (f) h += '<p style="margin-top:12px"><a class="btn" href="' + formHref(f) + '" download>ดาวน์โหลด ' + esc(f.title.split(" · ")[0]) + "</a></p>";
+    h += "<h4>ส่งต่อ</h4><p>→ " + s.next + "</p>" + tip(s);
+    h += '<div style="display:flex;gap:8px;margin-top:26px">' +
+      (i > 0 ? '<button type="button" class="btn" data-go="' + (i - 1) + '">← ก่อนหน้า</button>' : "") +
+      (i < FACULTY.length - 1 ? '<button type="button" class="btn" data-go="' + (i + 1) + '" style="margin-left:auto">ถัดไป →</button>' : "") + "</div>";
+    var body = document.getElementById("drBody");
+    body.innerHTML = h;
+    body.querySelectorAll("[data-go]").forEach(function (b) { b.addEventListener("click", function () { openDrawer(+b.getAttribute("data-go")); }); });
+    if (!drawer.open) drawer.showModal();
+  }
+  document.getElementById("drClose").addEventListener("click", function () { drawer.close(); });
+  drawer.addEventListener("click", function (e) { if (e.target === drawer) drawer.close(); });
+
+  /* ======================= ระดับมหาวิทยาลัย ======================= */
+  var road = document.getElementById("road");
+  var EXAMPLES = {}; // { docId: { file: "ตัวอย่าง/x.pdf", size, updated } } โหลดจาก forms/examples.js
+  function exHref(file) { return "forms/" + file.split("/").map(encodeURIComponent).join("/"); }
+  function docRows(docs) {
+    return docs.map(function (dc) {
+      var ex = EXAMPLES[dc.id];
+      var acts = "";
+      if (ex) acts += '<a class="btn" href="' + exHref(ex.file) + '" target="_blank" rel="noopener">ดูตัวอย่าง</a>';
+      if (VIEW === "hr") {
+        acts += '<button type="button" class="btn" data-ex-edit="' + dc.id + '">' + (ex ? "แก้ไขตัวอย่าง" : "เพิ่มตัวอย่าง") + "</button>";
+        if (ex) acts += '<button type="button" class="btn danger" data-ex-del="' + dc.id + '">ลบ</button>';
+      }
+      return '<div class="drow"><div class="dn">' + dc.name + (dc.note ? "<small>" + dc.note + "</small>" : "") +
+        (ex ? '<small class="dm">' + ext(ex.file) + " · " + fmtSize(ex.size || 0) + (ex.updated ? " · ปรับปรุง " + thDate(new Date(ex.updated + "T00:00:00")) : "") + "</small>" : '<small class="dm">ยังไม่มีตัวอย่าง</small>') +
+        '</div><div class="dact">' + acts + "</div></div>";
+    }).join("");
+  }
+  function renderRoad() {
+    var openSet = {};
+    road.querySelectorAll("details.step").forEach(function (d, i) { if (d.open) openSet[i] = true; });
+    road.innerHTML = "";
+    UNIVERSITY.forEach(function (s, i) {
+      var docs = STEP_DOCS[s.n] || [];
+      var stop = el("div", { class: "stop" });
+      stop.appendChild(el("div", { class: "pin" + (s.sub ? " sub" : ""), "aria-hidden": "true" }, s.n));
+      var d = el("details", { class: "step s-item" });
+      if (openSet[i]) d.open = true;
+      d.innerHTML = "<summary>" + tag(s.lane, s.who) + "<h3>" + s.title + "</h3>" + (s.time ? '<span class="time">' + s.time + "</span>" : "") +
+        (docs.length ? '<span class="reg">เอกสาร ' + docs.length + "</span>" : "") + "</summary>" +
+        '<div class="step-body">' + ul(s.items) +
+        (docs.length ? '<div class="docs"><div class="docs-h">เอกสารในขั้นตอนนี้</div>' + docRows(docs) + "</div>" : "") +
+        tip(s) + (s.ref ? '<p class="ref" style="margin-top:10px">' + s.ref + "</p>" : "") + "</div>";
+      stop.appendChild(d);
+      road.appendChild(stop);
+    });
+    road.querySelectorAll("[data-ex-edit]").forEach(function (b) { b.addEventListener("click", function () { editExample(b.getAttribute("data-ex-edit")); }); });
+    road.querySelectorAll("[data-ex-del]").forEach(function (b) { b.addEventListener("click", function () { deleteExample(b.getAttribute("data-ex-del")); }); });
+    if (typeof applySearch === "function" && document.getElementById("q").value) applySearch();
+  }
+  function docName(id) {
+    for (var k in STEP_DOCS) for (var i = 0; i < STEP_DOCS[k].length; i++) if (STEP_DOCS[k][i].id === id) return STEP_DOCS[k][i].name;
+    return id;
+  }
+
+  /* ----- ตัวอย่างเอกสาร: เจ้าหน้าที่เพิ่ม/แก้ไข/ลบ (เขียนลง forms/ตัวอย่าง และ forms/examples.js) ----- */
+  async function ensureConnected() {
+    if (!("showDirectoryPicker" in window)) { toast("ต้องใช้ Chrome หรือ Edge บนคอมพิวเตอร์"); return false; }
+    if (!fs.dir) await connect();
+    return !!fs.dir;
+  }
+  function exampleUsedElsewhere(file, exceptId) {
+    return Object.keys(EXAMPLES).some(function (k) { return k !== exceptId && EXAMPLES[k].file === file; });
+  }
+  async function writeExamples() {
+    var txt = "/* ตัวอย่างเอกสารของแต่ละขั้นตอน: ไฟล์นี้ถูกเขียนใหม่อัตโนมัติเมื่อเจ้าหน้าที่แก้ไขตัวอย่างจากหน้าคู่มือ */\nwindow.EXAMPLES = " + JSON.stringify(EXAMPLES, null, 2) + ";\n";
+    var h = await fs.dir.getFileHandle("examples.js", { create: true });
+    var w = await h.createWritable(); await w.write(new Blob([txt], { type: "text/javascript" })); await w.close();
+  }
+  async function removeExampleFile(file, exceptId) {
+    if (file.indexOf("ตัวอย่าง/") !== 0 || exampleUsedElsewhere(file, exceptId)) return; // ไม่ลบแบบฟอร์มหลัก หรือไฟล์ที่ขั้นอื่นใช้ร่วม
+    try { await (await fs.dir.getDirectoryHandle("ตัวอย่าง")).removeEntry(file.slice("ตัวอย่าง/".length)); } catch (e) {}
+  }
+  async function editExample(id) {
+    if (!(await ensureConnected())) return;
+    var inp = el("input", { type: "file" });
+    inp.addEventListener("change", async function () {
+      var file = inp.files[0]; if (!file) return;
+      try {
+        var dir = await fs.dir.getDirectoryHandle("ตัวอย่าง", { create: true });
+        var base = safeName(file.name), name = base, dot = base.lastIndexOf("."), n = 2;
+        var cur = EXAMPLES[id] && EXAMPLES[id].file;
+        while (exampleUsedElsewhere("ตัวอย่าง/" + name, id)) name = (dot > 0 ? base.slice(0, dot) : base) + "-" + (n++) + (dot > 0 ? base.slice(dot) : "");
+        var h = await dir.getFileHandle(name, { create: true });
+        var w = await h.createWritable(); await w.write(file); await w.close();
+        EXAMPLES[id] = { file: "ตัวอย่าง/" + name, size: file.size, updated: iso(new Date()) };
+        await writeExamples();
+        if (cur && cur !== EXAMPLES[id].file) await removeExampleFile(cur, id);
+        renderRoad(); toast("บันทึกตัวอย่าง “" + docName(id) + "” แล้ว");
+      } catch (e) { toast("บันทึกไม่สำเร็จ: " + e.message); }
+    });
+    inp.click();
+  }
+  async function deleteExample(id) {
+    if (!confirm("ลบตัวอย่างของ “" + docName(id) + "”?")) return;
+    if (!(await ensureConnected())) return;
+    try {
+      var cur = EXAMPLES[id].file;
+      delete EXAMPLES[id];
+      await writeExamples();
+      await removeExampleFile(cur, id);
+      renderRoad(); toast("ลบตัวอย่างแล้ว");
+    } catch (e) { toast("ลบไม่สำเร็จ: " + e.message); }
+  }
+
+  /* ======================= เกณฑ์ ======================= */
+  var critPanel = document.getElementById("critPanel");
+  function renderCriteria(rank) {
+    if (rank === "special") {
+      critPanel.innerHTML = '<div class="card pad s-item"><p class="muted">ใช้คุณสมบัติด้านเวลาและการสอนเหมือนสายทั่วไป ผลงานทำหลังได้ตำแหน่งปัจจุบัน ผ่าน peer reviewer หลากหลายสถาบัน ใช้แบบ ก.พ.อ.06 / 07 <span class="ref">หมวด 7 ข้อ 46–52</span></p>' +
+        '<div class="table-wrap"><table><thead><tr><th>ด้าน</th><th>ผศ.</th><th>รศ.</th><th>ศ.</th><th>ส่วนร่วมขั้นต่ำ</th></tr></thead><tbody>' +
+        SPECIAL_ROWS.map(function (r) { return "<tr>" + r.map(function (c, j) { return "<td>" + (j === 0 ? "<b>" + c + "</b>" : c) + "</td>"; }).join("") + "</tr>"; }).join("") +
+        '</tbody></table></div><div class="note"><b>ด้านการสอน</b> ใช้จริงแล้ว ≥ 2 ปีการศึกษา หรือ 4 ภาคการศึกษา หรือ ≥ 4 กระบวนวิชา · ผลประเมินการสอนทุกวิชาย้อนหลัง 2 ปีการศึกษา เฉลี่ย “ดีมาก” (ผศ./รศ.) หรือ “ดีเด่น” (ศ.) · หลักฐานเชิงประจักษ์ ≥ 2 รายการต่อชิ้น</div></div>';
+      return;
+    }
+    var c = CRITERIA[rank];
+    critPanel.innerHTML = '<div class="crit-grid">' +
+      '<div class="card pad crit s-item"><div class="lbl">ระยะเวลาดำรงตำแหน่ง</div>' + ul(c.time) + '<span class="ref">' + c.timeRef + "</span></div>" +
+      '<div class="card pad crit s-item"><div class="lbl">การสอน</div>' + ul(c.teach) + '<span class="ref">' + c.teachRef + "</span></div>" +
+      '<div class="card pad crit s-item" style="grid-column:1/-1"><div class="lbl">ผลงานทางวิชาการ</div><div class="routes">' +
+      c.routes.map(function (r) { return '<div class="route"><b>' + r.name + "</b>" + ul(r.items) + "</div>"; }).join("") +
+      '<div class="route" style="border-top-color:var(--line)"><b>เงื่อนไขเพิ่มเติม</b>' + ul(c.cond) + "</div></div>" +
+      '<p class="ref" style="margin-top:12px">' + c.workRef + " · ระดับคุณภาพ B / A / A+ ตามข้อ 22</p></div></div>";
+  }
+  var tabs = document.querySelectorAll('.tabs [role="tab"]');
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (x) { x.setAttribute("aria-selected", x === t ? "true" : "false"); });
+      renderCriteria(t.getAttribute("data-rank")); applySearch();
+    });
+  });
+  renderCriteria("asst");
+
+  /* ======================= ก.พ.อ.03 ======================= */
+  var partsEl = document.getElementById("parts");
+  PARTS.forEach(function (p) {
+    partsEl.appendChild(el("div", { class: "part s-item" }, '<div class="n">' + p.n + "</div><h4>" + p.t + "</h4>" + ul(p.items) +
+      '<div class="w">' + p.who.map(function (w) { return tag(w[0], w[1]); }).join("") + "</div>"));
+  });
+
+  /* ======================= แบบฟอร์ม ======================= */
+  var FORMS = Array.isArray(window.FORMS) ? window.FORMS : [];
+  function formById(id) { for (var i = 0; i < FORMS.length; i++) if (FORMS[i].id === id) return FORMS[i]; return null; }
+  function formHref(f) { return "forms/" + encodeURIComponent(f.file); }
+  function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round(n / 1024)) + " KB"; }
+  function ext(name) { var m = /\.([a-z0-9]+)$/i.exec(name); return m ? m[1].toUpperCase() : "FILE"; }
+  var formList = document.getElementById("formList");
+  var fs = { root: null, dir: null };
+
+  function renderForms() {
+    if (!FORMS.length) { formList.innerHTML = '<div class="no-result">ยังไม่มีแบบฟอร์มในรายการ</div>'; return; }
+    var groups = [];
+    FORMS.forEach(function (f) { if (groups.indexOf(f.group) === -1) groups.push(f.group); });
+    formList.innerHTML = "";
+    groups.forEach(function (g) {
+      formList.appendChild(el("div", { class: "form-group-h" }, esc(g)));
+      FORMS.filter(function (f) { return f.group === g; }).forEach(function (f) {
+        var e = ext(f.file);
+        var row = el("div", { class: "frow s-item" },
+          '<div class="ftype ' + (e === "PDF" ? "pdf" : /DOC/.test(e) ? "doc" : "") + '">' + e + "</div>" +
+          "<div><b>" + esc(f.title) + "</b>" + (f.desc ? '<div class="d">' + esc(f.desc) + "</div>" : "") +
+          '<div class="m">' + fmtSize(f.size || 0) + " · ปรับปรุง " + (f.updated ? thDate(new Date(f.updated + "T00:00:00")) : "-") + "</div></div>" +
+          '<div class="fact"><a class="btn primary" href="' + formHref(f) + '" download>ดาวน์โหลด</a>' +
+          (VIEW === "hr" && fs.dir ? '<button type="button" class="btn" data-act="replace">อัปโหลดฉบับใหม่</button><button type="button" class="btn" data-act="remove">ลบ</button>' : "") + "</div>");
+        row.querySelectorAll("[data-act]").forEach(function (b) {
+          b.addEventListener("click", function () { b.getAttribute("data-act") === "replace" ? pickReplace(f) : removeForm(f); });
+        });
+        formList.appendChild(row);
+      });
+    });
+    renderMemos();
+    applySearch();
+  }
+
+  /* ----- เจ้าหน้าที่: เขียนไฟล์ลงโฟลเดอร์ forms ด้วย File System Access API ----- */
+  var canFS = "showDirectoryPicker" in window;
+  function setStatus() {
+    var st = document.getElementById("fsStatus");
+    st.classList.toggle("on", !!fs.dir);
+    st.querySelector("span").textContent = fs.dir ? "เชื่อมต่อโฟลเดอร์ “" + fs.root.name + "” แล้ว · อัปโหลดได้" : "ยังไม่ได้เชื่อมต่อโฟลเดอร์";
+    document.getElementById("fsConnect").textContent = fs.dir ? "เปลี่ยนโฟลเดอร์" : "เชื่อมต่อโฟลเดอร์คู่มือ";
+    document.getElementById("addForm").classList.toggle("hidden", !fs.dir);
+  }
+  function safeName(n) { return n.replace(/[\\/:*?"<>|]+/g, "-").trim() || "แบบฟอร์ม"; }
+  function uniqueName(name, exceptId) {
+    var used = FORMS.filter(function (f) { return f.id !== exceptId; }).map(function (f) { return f.file; });
+    if (used.indexOf(name) === -1) return name;
+    var dot = name.lastIndexOf("."), base = dot > 0 ? name.slice(0, dot) : name, ex = dot > 0 ? name.slice(dot) : "";
+    for (var i = 2; ; i++) if (used.indexOf(base + "-" + i + ex) === -1) return base + "-" + i + ex;
+  }
+  async function connect() {
+    try {
+      var root = await window.showDirectoryPicker({ id: "arm-manual", mode: "readwrite" });
+      var dir = root.name === "forms" ? root : await root.getDirectoryHandle("forms", { create: true });
+      fs.root = root; fs.dir = dir;
+      setStatus(); renderForms();
+      toast("เชื่อมต่อโฟลเดอร์แล้ว");
+    } catch (e) {
+      if (e && e.name !== "AbortError") toast("เชื่อมต่อไม่สำเร็จ: " + e.message);
+    }
+  }
+  async function writeFile(name, file) {
+    var h = await fs.dir.getFileHandle(name, { create: true });
+    var w = await h.createWritable(); await w.write(file); await w.close();
+  }
+  async function writeManifest() {
+    var txt = "/* รายการแบบฟอร์ม: ไฟล์นี้ถูกเขียนใหม่อัตโนมัติเมื่อเจ้าหน้าที่อัปโหลดแบบฟอร์มจากหน้าคู่มือ */\nwindow.FORMS = " + JSON.stringify(FORMS, null, 2) + ";\n";
+    await writeFile("forms.js", new Blob([txt], { type: "text/javascript" }));
+  }
+  function pickReplace(f) {
+    var inp = el("input", { type: "file" });
+    inp.addEventListener("change", async function () {
+      var file = inp.files[0]; if (!file) return;
+      try {
+        var name = uniqueName(safeName(file.name), f.id), old = f.file;
+        await writeFile(name, file);
+        f.file = name; f.size = file.size; f.updated = iso(new Date());
+        await writeManifest();
+        if (old !== name) { try { await fs.dir.removeEntry(old); } catch (e) {} }
+        renderForms(); toast("อัปโหลด “" + f.title + "” ฉบับใหม่แล้ว");
+      } catch (e) { toast("อัปโหลดไม่สำเร็จ: " + e.message); }
+    });
+    inp.click();
+  }
+  async function removeForm(f) {
+    if (!confirm("ลบ “" + f.title + "” ออกจากรายการและลบไฟล์ในโฟลเดอร์ forms?")) return;
+    try {
+      FORMS = FORMS.filter(function (x) { return x !== f; });
+      await writeManifest();
+      try { await fs.dir.removeEntry(f.file); } catch (e) {}
+      renderForms(); toast("ลบแบบฟอร์มแล้ว");
+    } catch (e) { toast("ลบไม่สำเร็จ: " + e.message); }
+  }
+  async function addForm() {
+    var title = document.getElementById("nfTitle").value.trim();
+    var file = document.getElementById("nfFile").files[0];
+    if (!title || !file) { toast("กรอกชื่อแบบฟอร์มและเลือกไฟล์ก่อน"); return; }
+    try {
+      var name = uniqueName(safeName(file.name));
+      await writeFile(name, file);
+      FORMS.push({ id: "f" + Date.now(), title: title, desc: document.getElementById("nfDesc").value.trim(),
+        group: document.getElementById("nfGroup").value, file: name, size: file.size, updated: iso(new Date()) });
+      await writeManifest();
+      ["nfTitle", "nfDesc", "nfFile"].forEach(function (id) { document.getElementById(id).value = ""; });
+      renderForms(); toast("เพิ่ม “" + title + "” แล้ว");
+    } catch (e) { toast("อัปโหลดไม่สำเร็จ: " + e.message); }
+  }
+  if (VIEW === "hr") {
+    if (!canFS) { document.getElementById("fsConnect").disabled = true; document.getElementById("fsUnsupported").classList.remove("hidden"); }
+    document.getElementById("fsConnect").addEventListener("click", connect);
+    document.getElementById("nfAdd").addEventListener("click", addForm);
+    setStatus();
+  }
+
+  /* ======================= Checklist ======================= */
+  var clWrap = document.getElementById("checklists");
+  CHECKLISTS.filter(function (cl) { return cl.for === VIEW; }).forEach(function (cl) {
+    var saved = store("chk-" + cl.id) || {};
+    var card = el("div", { class: "card pad" });
+    card.innerHTML = '<div class="ck-head"><h3>' + cl.title + '</h3><span class="small muted cnt"></span><button type="button" class="btn no-print">ล้างค่า</button></div>' +
+      '<div class="bar-p"><i></i></div><div class="ref">' + cl.ref + "</div>";
+    var list = el("div", { style: "margin-top:8px" });
+    cl.items.forEach(function (it, i) {
+      var id = "c-" + cl.id + "-" + i;
+      var row = el("div", { class: "chk s-item" }, '<input type="checkbox" id="' + id + '"><label for="' + id + '"><span>' + it[0] + "</span>" +
+        (it[2] ? '<span class="q">' + it[2] + "</span>" : "") + (it[1] ? '<span class="d">' + it[1] + "</span>" : "") + "</label>");
+      var box = row.querySelector("input");
+      box.checked = !!saved[i]; row.classList.toggle("done", box.checked);
+      box.addEventListener("change", function () { saved[i] = box.checked; row.classList.toggle("done", box.checked); store("chk-" + cl.id, saved); update(); });
+      list.appendChild(row);
+    });
+    card.appendChild(list);
+    function update() {
+      var n = cl.items.filter(function (_, i) { return saved[i]; }).length;
+      card.querySelector(".cnt").textContent = n + " / " + cl.items.length;
+      card.querySelector(".bar-p i").style.width = (n / cl.items.length * 100) + "%";
+    }
+    card.querySelector(".ck-head button").addEventListener("click", function () {
+      saved = {}; store("chk-" + cl.id, saved);
+      list.querySelectorAll("input").forEach(function (b) { b.checked = false; b.closest(".chk").classList.remove("done"); });
+      update();
+    });
+    update();
+    clWrap.appendChild(card);
+  });
+
+  /* ======================= บันทึกข้อความ ======================= */
+  var memoGrid = document.getElementById("memoGrid");
+  function renderMemos() {
+    memoGrid.innerHTML = "";
+    MEMOS.forEach(function (m) {
+      var f = formById(m.form);
+      memoGrid.appendChild(el("div", { class: "card memo s-item" },
+        '<div class="k">' + m.n + "</div><h3>" + m.t + '</h3><div class="small muted">ยื่นเมื่อ ' + m.when + "</div>" +
+        ul(m.fill) + '<div class="att"><b style="font-weight:500;color:var(--ink)">แนบ</b> ' + m.att + '</div><div class="sp"></div>' +
+        (f ? '<a class="btn" href="' + formHref(f) + '" download>ดาวน์โหลดแบบฟอร์ม (' + ext(f.file) + ")</a>" : '<span class="small muted">ยังไม่มีไฟล์แบบฟอร์ม</span>')));
+    });
+  }
+
+  /* ======================= ตรวจคุณสมบัติ ======================= */
+  var elRank = document.getElementById("elRank"), elDeg = document.getElementById("elDeg"), elDate = document.getElementById("elDate"), elRes = document.getElementById("elResult");
+  var LBL = { asst: "วันที่ได้รับแต่งตั้งเป็นอาจารย์", assoc: "วันที่ได้รับแต่งตั้งเป็น ผศ.", prof: "วันที่ได้รับแต่งตั้งเป็น รศ." };
+  function checkElig() {
+    var r = elRank.value;
+    document.getElementById("elDegWrap").style.display = r === "asst" ? "" : "none";
+    document.getElementById("elDateLbl").textContent = LBL[r];
+    if (!elDate.value) { elRes.className = "result"; elRes.innerHTML = '<span class="muted">กรอกวันที่เพื่อดูผล</span>'; return; }
+    var p = elDate.value.split("-"), start = new Date(+p[0], +p[1] - 1, +p[2]);
+    var years = r === "asst" ? (elDeg.value === "phd" ? 1 : 4) : 2;
+    var due = new Date(start); due.setFullYear(due.getFullYear() + years);
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var left = Math.ceil((due - today) / DAY);
+    var need = (r === "asst" ? "อาจารย์ " + (elDeg.value === "phd" ? "(ป.เอก)" : "(ป.โท)") : r === "assoc" ? "ผศ." : "รศ.") + " ครบ " + years + " ปี";
+    if (left <= 0) { elRes.className = "result ok"; elRes.innerHTML = '<div class="big">ครบเวลาแล้ว · ขอโดยวิธีปกติได้</div><span class="muted">เป็น' + need + " ตั้งแต่ " + thDate(due) + "</span>"; }
+    else { elRes.className = "result no"; elRes.innerHTML = '<div class="big">ยังไม่ครบ อีก ' + left.toLocaleString("th-TH") + ' วัน</div><span class="muted">เป็น' + need + " ในวันที่ " + thDate(due) + " · ถ้ายื่นก่อนวันนี้ต้องใช้วิธีพิเศษ</span>"; }
+  }
+  [elRank, elDeg, elDate].forEach(function (x) { x.addEventListener("input", checkElig); x.addEventListener("change", checkElig); });
+  checkElig();
+
+  /* ======================= ประมาณการไทม์ไลน์ ======================= */
+  function phases(rank) {
+    return [
+      ["หัวหน้าสาขาพิจารณาและอนุมัติ", "head", 2, 4],
+      ["HR ตรวจเอกสาร → เสนอคณบดี → คำสั่งกรรมการ", "hr", 6, 6],
+      ["HR เตรียมเอกสารส่งกรรมการ", "hr", 2, 2],
+      ["กรรมการประเมินและประชุมสรุปผล", "com", 14, 30],
+      ["HR แจ้งผล + ผู้ขอแก้ไขเอกสาร", "app", 9, 32, "ระยะแก้ไขของผู้ขอเป็นค่าสมมุติ 7–30 วัน"],
+      ["เสนอคณบดีลงนาม", "dean", 2, 2],
+      ["ส่งเรื่องถึงกองทรัพยากรมนุษย์", "hr", 1, 30],
+      ["กองทรัพยากรมนุษย์ตรวจ ก.พ.อ.03", "uni", 7, 7],
+      ["กพว. ตั้ง/ทาบทามผู้ทรงคุณวุฒิ", "uni", 30, 45],
+      ["ผู้ทรงคุณวุฒิพิจารณาผลงาน", "uni", rank === "p" ? 90 : 60, rank === "p" ? 180 : 120],
+      ["กพว. → สภาวิชาการ → สภามหาวิทยาลัย", "uni", 30, 90, "ค่าสมมุติ ขึ้นกับรอบประชุม"]
+    ];
+  }
+  var tlStart = document.getElementById("tlStart"), tlRank = document.getElementById("tlRank");
+  tlStart.value = store("tlStart") || iso(new Date());
+  function renderPlan() {
+    var p = (tlStart.value || iso(new Date())).split("-"), start = new Date(+p[0], +p[1] - 1, +p[2]);
+    store("tlStart", tlStart.value);
+    var ph = phases(tlRank.value), total = ph.reduce(function (a, x) { return a + x[3]; }, 0);
+    var cMin = 0, cMax = 0, fMin = 0, fMax = 0;
+    var h = '<h3 class="sub">แผนภูมิประมาณการ</h3><p class="ref">แถบเข้ม = เร็วที่สุด · แถบจาง = ช้าที่สุด</p>';
+    ph.forEach(function (x, i) {
+      var s0 = cMin; cMin += x[2]; cMax += x[3];
+      if (i === 6) { fMin = cMin; fMax = cMax; }
+      h += '<div class="g-row s-item"><div>' + tag(x[1], x[0]) + (x[4] ? '<div class="ref">' + x[4] + "</div>" : "") + "</div>" +
+        '<div class="g-track" style="--lc:var(--c-' + x[1] + ')"><span class="g-bar range" style="left:' + (s0 / total * 100) + "%;width:" + ((cMax - s0) / total * 100) + '%"></span><span class="g-bar" style="left:' + (s0 / total * 100) + "%;width:" + (x[2] / total * 100) + '%"></span></div>' +
+        '<div class="g-date">' + thDate(addDays(start, cMin)) + (cMax !== cMin ? "<br>– " + thDate(addDays(start, cMax)) : "") + "</div></div>";
+    });
+    document.getElementById("gantt").innerHTML = h;
+    document.getElementById("tlTotal").innerHTML =
+      '<div><span class="small muted">ส่งถึงกองทรัพยากรมนุษย์</span><b>' + thDate(addDays(start, fMin)) + " – " + thDate(addDays(start, fMax)) + "</b></div>" +
+      '<div><span class="small muted">เข้าสภามหาวิทยาลัย</span><b>' + thDate(addDays(start, cMin)) + " – " + thDate(addDays(start, cMax)) + "</b></div>" +
+      (tlRank.value === "p" ? '<div><span class="small muted">ศ. หลังสภามหาวิทยาลัย</span><b>ก.พ.อ. → โปรดเกล้าฯ</b></div>' : "");
+  }
+  tlStart.addEventListener("change", renderPlan); tlRank.addEventListener("change", renderPlan);
+  renderPlan();
+
+  /* ======================= FAQ ======================= */
+  var faqList = document.getElementById("faqList");
+  FAQ.filter(function (f) { return !f.for || f.for === VIEW; }).forEach(function (f) {
+    faqList.appendChild(el("details", { class: "faq s-item" }, "<summary>" + f.q + '</summary><div class="a">' + f.a + "</div>"));
+  });
+
+  /* ======================= ค้นหา ======================= */
+  var q = document.getElementById("q");
+  function applySearch() {
+    var term = q.value.trim().toLowerCase(), hits = 0;
+    document.querySelectorAll(".s-item").forEach(function (it) {
+      var m = !term || it.textContent.toLowerCase().indexOf(term) !== -1;
+      it.classList.toggle("hidden", !m);
+      if (m) hits++;
+      if (term && m && it.tagName === "DETAILS") it.open = true;
+    });
+    document.querySelectorAll(".stop").forEach(function (s) { s.classList.toggle("hidden", !!s.querySelector(".s-item.hidden")); });
+    document.getElementById("noResult").classList.toggle("hidden", !term || hits > 0);
+    drawLinks();
+  }
+  q.addEventListener("input", applySearch);
+
+  /* ======================= สารบัญ ======================= */
+  var links = document.querySelectorAll("nav.links a");
+  var secs = Array.prototype.slice.call(document.querySelectorAll("section.block"));
+  var ticking = false;
+  function markNav() {
+    ticking = false;
+    var cur = "";
+    secs.forEach(function (s) { if (s.getBoundingClientRect().top < 160) cur = s.id; });
+    links.forEach(function (a) { a.classList.toggle("active", a.getAttribute("href") === "#" + cur); });
+  }
+  window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(markNav); } }, { passive: true });
+  markNav();
+
+  /* ======================= พิมพ์ ======================= */
+  var opened = [];
+  // พื้นที่พิมพ์ของ A4 แนวนอน ขอบ 10 มม. (277 × 190 มม.) เป็นพิกเซล CSS หักหัวข้อส่วนออก
+  var PRINT_W = 277 / 25.4 * 96, PRINT_H = 190 / 25.4 * 96 - 110;
+  function preparePrint() {
+    if (document.documentElement.classList.contains("printing")) return;
+    document.querySelectorAll("details:not([open])").forEach(function (d) { d.open = true; opened.push(d); });
+    document.documentElement.classList.add("printing");
+    lanesEl.style.zoom = "";
+    arrowsLocked = false;
+    drawLinks();
+    arrowsLocked = true;
+    var z = Math.min(1, PRINT_W / lanesEl.offsetWidth, PRINT_H / lanesEl.offsetHeight) * 0.97; // เผื่อขอบเล็กน้อย
+    lanesEl.style.zoom = String(Math.floor(z * 1000) / 1000);
+  }
+  function restoreAfterPrint() {
+    opened.forEach(function (d) { d.open = false; }); opened = [];
+    document.documentElement.classList.remove("printing");
+    lanesEl.style.zoom = "";
+    arrowsLocked = false;
+    drawLinks();
+  }
+  window.addEventListener("beforeprint", preparePrint);
+  window.addEventListener("afterprint", restoreAfterPrint);
+  document.getElementById("printBtn").addEventListener("click", function () { window.print(); });
+
+  /* ======================= โหลดรายการแบบฟอร์ม ======================= */
+  var sc = document.createElement("script");
+  sc.src = "forms/forms.js?v=" + Date.now();
+  sc.onload = function () { FORMS = Array.isArray(window.FORMS) ? window.FORMS : []; renderForms(); };
+  sc.onerror = function () { formList.innerHTML = '<div class="no-result">ไม่พบไฟล์ forms/forms.js</div>'; renderMemos(); };
+  document.body.appendChild(sc);
+  renderMemos();
+
+  /* ======================= โหลดตัวอย่างเอกสาร ======================= */
+  var sx = document.createElement("script");
+  sx.src = "forms/examples.js?v=" + Date.now();
+  sx.onload = function () { EXAMPLES = window.EXAMPLES && typeof window.EXAMPLES === "object" ? window.EXAMPLES : {}; renderRoad(); };
+  sx.onerror = function () { renderRoad(); };
+  document.body.appendChild(sx);
+  renderRoad();
+})();
+</script>
+</body>
+</html>

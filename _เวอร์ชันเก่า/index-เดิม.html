@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เส้นทางการขอตำแหน่งทางวิชาการ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  คู่มือ "เส้นทางการขอตำแหน่งทางวิชาการ"                          ║
+  ║  หน่วยบริหารงานบุคคล คณะพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่         ║
+  ║                                                              ║
+  ║  วิธีใช้: ดับเบิลคลิกไฟล์นี้ เปิดด้วย Chrome / Edge ได้เลย          ║
+  ║  วิธีแก้ข้อความ: เปิดไฟล์ด้วย Notepad หรือ VS Code                ║
+  ║    แล้วค้นหาหัวข้อ  ===== ส่วนที่ ... =====  แก้เฉพาะตัวหนังสือ     ║
+  ║    ระหว่างแท็ก เช่น <p>แก้ตรงนี้</p>  จากนั้นบันทึกแล้วกด F5        ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+
+<style>
+/* ---------- 1) สีหลักของทั้งหน้า (เปลี่ยนสีได้ที่นี่ที่เดียว) ---------- */
+:root {
+  --ส้ม: #F26522;        /* สีหลักของหน่วยงาน */
+  --ส้มอ่อน: #FFF1E8;
+  --ผู้ขอ: #A64DC9;       /* ม่วง = อาจารย์ผู้ขอ */
+  --หัวหน้า: #2F8FD6;     /* ฟ้า = หัวหน้าสาขา */
+  --HR: #7E9124;          /* เขียว = HR FON */
+  --กรรมการ: #6B5BC2;     /* ม่วงคราม = กรรมการประเมิน */
+  --คณบดี: #D98A12;       /* เหลืองส้ม = คณบดี */
+  --มหาลัย: #4A4A55;      /* เทา = ระดับมหาวิทยาลัย */
+
+  --พื้น: #F6F5F3;
+  --การ์ด: #FFFFFF;
+  --ตัวอักษร: #1E1B18;
+  --ตัวอักษรรอง: #5E5A55;
+  --เส้น: #E6E2DC;
+}
+/* โหมดมืด (ปรับอัตโนมัติตามเครื่อง) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ส้มอ่อน: #3A2418;
+    --พื้น: #17161A; --การ์ด: #222127; --ตัวอักษร: #F1EEEA;
+    --ตัวอักษรรอง: #B5AFA8; --เส้น: #34323A;
+  }
+}
+
+/* ---------- 2) รูปแบบพื้นฐาน ---------- */
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--พื้น); color: var(--ตัวอักษร);
+  font-family: "IBM Plex Sans Thai", system-ui, sans-serif; line-height: 1.65;
+}
+h1, h2, h3 { font-family: "Kanit", sans-serif; line-height: 1.3; margin: 0 0 .5em; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.15rem; }
+a { color: var(--ส้ม); }
+.กล่อง { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+section { padding: 40px 0; border-bottom: 1px solid var(--เส้น); }
+.คำอธิบาย { color: var(--ตัวอักษรรอง); margin-top: -4px; }
+button { font: inherit; cursor: pointer; }
+button:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--ส้ม); outline-offset: 2px; }
+
+/* ---------- 3) แถบเมนูด้านบน ---------- */
+.เมนู {
+  position: sticky; top: 0; z-index: 10; background: var(--การ์ด);
+  border-bottom: 1px solid var(--เส้น);
+}
+.เมนู .กล่อง { display: flex; gap: 6px; overflow-x: auto; padding-top: 8px; padding-bottom: 8px; }
+.เมนู a {
+  white-space: nowrap; text-decoration: none; color: var(--ตัวอักษร);
+  padding: 6px 12px; border-radius: 999px; font-size: .92rem;
+}
+.เมนู a:hover { background: var(--ส้มอ่อน); color: var(--ส้ม); }
+
+/* ---------- 4) ส่วนหัว (Hero) ---------- */
+.หัวเรื่อง { background: var(--ส้ม); color: #fff; padding: 44px 0 36px; }
+.หัวเรื่อง h1 { font-size: clamp(1.9rem, 5vw, 2.9rem); }
+.ป้ายขาว {
+  display: inline-block; background: #fff; color: #1E1B18; font-weight: 600;
+  padding: 4px 16px; border-radius: 999px; margin-bottom: 14px;
+}
+.ปุ่มบทบาท { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.ปุ่มบทบาท button {
+  border: 2px solid #fff; background: transparent; color: #fff;
+  padding: 8px 16px; border-radius: 999px; font-weight: 600;
+}
+.ปุ่มบทบาท button.เลือกอยู่ { background: #fff; color: var(--ส้ม); }
+
+/* ---------- 5) แถบเตือนเส้นตาย ---------- */
+.เตือน {
+  background: #FFF6D6; color: #4A3B00; border: 2px solid #E8C547;
+  border-radius: 14px; padding: 14px 18px; margin: 24px 0 0;
+  display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
+}
+.เตือน .ตัวเลข { font-family: "Kanit"; font-size: 2rem; font-weight: 700; color: #B44A00; }
+
+/* ---------- 6) การ์ดและป้ายสี ---------- */
+.ตาราง3 { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.การ์ด {
+  background: var(--การ์ด); border: 1px solid var(--เส้น); border-radius: 16px; padding: 18px;
+}
+.ป้าย {
+  display: inline-block; font-size: .8rem; font-weight: 600; color: #fff;
+  padding: 2px 10px; border-radius: 999px; margin: 0 4px 4px 0;
+}
+.ป้าย.ผู้ขอ { background: var(--ผู้ขอ); }
+.ป้าย.หัวหน้า { background: var(--หัวหน้า); }
+.ป้าย.HR { background: var(--HR); }
+.ป้าย.กรรมการ { background: var(--กรรมการ); }
+.ป้าย.คณบดี { background: var(--คณบดี); }
+.ป้าย.มหาลัย { background: var(--มหาลัย); }
+.เวลา {
+  display: inline-block; background: var(--ส้ม); color: #fff; font-size: .8rem;
+  font-weight: 600; padding: 2px 10px; border-radius: 6px;
+}
+.หมายเหตุ {
+  background: var(--ส้มอ่อน); border-left: 4px solid var(--ส้ม);
+  padding: 10px 14px; border-radius: 8px; margin: 14px 0; font-size: .95rem;
+}
+
+/* ---------- 7) ขั้นตอนแบบเส้นทาง (ตัวเลขวงกลม + เส้นเชื่อม) ---------- */
+.ขั้นตอน { list-style: none; padding: 0; margin: 0; position: relative; }
+.ขั้นตอน::before {   /* เส้นถนนแนวตั้ง */
+  content: ""; position: absolute; left: 21px; top: 8px; bottom: 8px; width: 4px;
+  background: repeating-linear-gradient(var(--เส้น) 0 10px, transparent 10px 16px);
+}
+.ขั้นตอน > li { position: relative; padding-left: 62px; margin-bottom: 14px; }
+.เลข {
+  position: absolute; left: 0; top: 10px; width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center; color: #fff; font-family: "Kanit"; font-weight: 700;
+  font-size: 1.2rem; border: 4px solid var(--พื้น); background: var(--ส้ม);
+}
+/* สีวงกลมตามผู้รับผิดชอบ */
+.ขั้นตอน li.ผู้ขอ .เลข { background: var(--ผู้ขอ); }
+.ขั้นตอน li.หัวหน้า .เลข { background: var(--หัวหน้า); }
+.ขั้นตอน li.HR .เลข { background: var(--HR); }
+.ขั้นตอน li.กรรมการ .เลข { background: var(--กรรมการ); }
+.ขั้นตอน li.คณบดี .เลข { background: var(--คณบดี); }
+.ขั้นตอน li.มหาลัย .เลข { background: var(--มหาลัย); }
+
+/* กล่องเปิด/ปิดรายละเอียด */
+details {
+  background: var(--การ์ด); border: 1px solid var(--เส้น); border-radius: 14px; padding: 0 16px;
+}
+summary { cursor: pointer; padding: 14px 0; font-weight: 600; list-style-position: outside; }
+summary .ย่อย { display: block; font-weight: 400; color: var(--ตัวอักษรรอง); font-size: .92rem; }
+details[open] summary { border-bottom: 1px dashed var(--เส้น); margin-bottom: 10px; }
+details > *:last-child { margin-bottom: 14px; }
+.สองช่อง { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+.สำหรับ { border-radius: 10px; padding: 10px 12px; font-size: .94rem; }
+.สำหรับ b { display: block; margin-bottom: 2px; }
+.สำหรับ.app { background: color-mix(in srgb, var(--ผู้ขอ) 12%, transparent); }
+.สำหรับ.hr { background: color-mix(in srgb, var(--HR) 14%, transparent); }
+
+/* ---------- 8) ซ่อน/แสดง ตามบทบาทที่เลือก ---------- */
+body.ดูแบบผู้ขอ .for-hr { display: none !important; }
+body.ดูแบบHR .for-app { display: none !important; }
+
+/* ---------- 9) ตาราง ---------- */
+.เลื่อนตาราง { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: var(--การ์ด); font-size: .93rem; }
+th, td { border: 1px solid var(--เส้น); padding: 8px 10px; text-align: left; vertical-align: top; }
+th { background: var(--ส้มอ่อน); font-family: "Kanit"; font-weight: 500; }
+
+/* ---------- 10) แท็บเลือกตำแหน่ง ---------- */
+.แท็บ { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.แท็บ button {
+  border: 2px solid var(--ส้ม); background: var(--การ์ด); color: var(--ส้ม);
+  padding: 6px 18px; border-radius: 999px; font-weight: 600;
+}
+.แท็บ button.เลือกอยู่ { background: var(--ส้ม); color: #fff; }
+.หน้าแท็บ { display: none; }
+.หน้าแท็บ.แสดง { display: block; }
+
+/* ---------- 11) Checklist ---------- */
+.เช็ก { list-style: none; padding: 0; margin: 0; }
+.เช็ก li { border-bottom: 1px solid var(--เส้น); padding: 10px 2px; }
+.เช็ก label { display: flex; gap: 10px; cursor: pointer; }
+.เช็ก input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--ส้ม); flex: none; }
+.เช็ก input:checked + span { text-decoration: line-through; color: var(--ตัวอักษรรอง); }
+.ความคืบหน้า { height: 10px; background: var(--เส้น); border-radius: 99px; overflow: hidden; margin: 8px 0 14px; }
+.ความคืบหน้า div { height: 100%; width: 0; background: var(--ส้ม); transition: width .3s; }
+.ปุ่มเล็ก {
+  border: 1px solid var(--เส้น); background: var(--การ์ด); color: var(--ตัวอักษร);
+  padding: 6px 14px; border-radius: 8px;
+}
+
+/* ---------- 12) ตัวช่วยคำนวณ ---------- */
+.ฟอร์ม { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom: 14px; }
+.ฟอร์ม label { font-size: .9rem; font-weight: 600; }
+.ฟอร์ม select, .ฟอร์ม input {
+  display: block; width: 100%; margin-top: 4px; padding: 8px 10px; font: inherit;
+  border: 1px solid var(--เส้น); border-radius: 8px; background: var(--การ์ด); color: var(--ตัวอักษร);
+}
+.ผลลัพธ์ { font-size: 1.05rem; }
+.แถบเวลา { display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 10px; }
+.แถว { display: grid; grid-template-columns: minmax(130px, 34%) 1fr; gap: 10px; align-items: center; font-size: .9rem; }
+.ราง { position: relative; height: 22px; background: var(--เส้น); border-radius: 6px; }
+.ราง span { position: absolute; top: 0; bottom: 0; border-radius: 6px; background: var(--ส้ม); }
+
+/* ---------- 13) ท้ายหน้า ---------- */
+footer { background: #2A2622; color: #EDE7E0; padding: 32px 0; }
+footer a { color: #FFB38A; }
+
+/* ---------- 14) ตอนสั่งพิมพ์ ---------- */
+@media print {
+  .เมนู, .ปุ่มบทบาท, .ไม่พิมพ์ { display: none !important; }
+  body { background: #fff; }
+  section { break-inside: avoid-page; }
+  .หัวเรื่อง { background: #fff; color: #000; border-bottom: 4px solid var(--ส้ม); }
+}
+@media (max-width: 600px) {
+  .แถว { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+</head>
+
+<body class="ดูทั้งหมด">
+
+<!-- ===== แถบเมนูด้านบน (กดแล้วเลื่อนไปยังหัวข้อ) ===== -->
+<nav class="เมนู" aria-label="สารบัญ">
+  <div class="กล่อง">
+    <a href="#ภาพรวม">ภาพรวม</a>
+    <a href="#ระดับคณะ">ขั้นตอนในคณะ</a>
+    <a href="#ระดับมหาวิทยาลัย">ขั้นตอนมหาวิทยาลัย</a>
+    <a href="#คุณสมบัติ">คุณสมบัติ/เกณฑ์</a>
+    <a href="#เอกสาร">เอกสาร/แบบฟอร์ม</a>
+    <a href="#เช็กลิสต์">เช็กลิสต์</a>
+    <a href="#ตัวช่วย">ตัวช่วยคำนวณ</a>
+    <a href="#คำถาม">คำถามพบบ่อย</a>
+    <a href="#ติดต่อ">ติดต่อ</a>
+  </div>
+</nav>
+
+<!-- ===== ส่วนที่ 1: หัวเรื่อง + ปุ่มเลือกบทบาท ===== -->
+<header class="หัวเรื่อง">
+  <div class="กล่อง">
+    <span class="ป้ายขาว">หน่วยบริหารงานบุคคล คณะพยาบาลศาสตร์ มช.</span>
+    <h1>เส้นทางการขอตำแหน่งทางวิชาการ</h1>
+    <p>คู่มือการทำงานสำหรับ <b>อาจารย์ผู้ขอตำแหน่ง</b> และ <b>เจ้าหน้าที่งานบุคคล (HR FON)</b><br>
+       อ้างอิงข้อบังคับมหาวิทยาลัยเชียงใหม่ พ.ศ. 2569 (ประกาศ 18 ก.ค. 2569)</p>
+
+    <div class="ปุ่มบทบาท" role="group" aria-label="เลือกมุมมอง">
+      <span style="align-self:center">ฉันคือ:</span>
+      <button type="button" data-view="ดูแบบผู้ขอ">👩‍🏫 อาจารย์ผู้ขอ</button>
+      <button type="button" data-view="ดูแบบHR">🗂️ เจ้าหน้าที่งานบุคคล</button>
+      <button type="button" data-view="ดูทั้งหมด" class="เลือกอยู่">ดูทั้งหมด</button>
+      <button type="button" onclick="window.print()">🖨️ พิมพ์</button>
+    </div>
+
+    <div class="เตือน" role="note">
+      <div class="ตัวเลข" id="นับถอยหลัง">–</div>
+      <div>
+        <b>เส้นตายสำคัญ: 25 พฤศจิกายน 2569</b><br>
+        บทความในวารสารระดับชาติที่เผยแพร่ภายใต้เกณฑ์เดิม ใช้ยื่นขอตำแหน่งได้ถึงวันนี้เท่านั้น
+        (บทเฉพาะกาล ข้อ 69)
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ===== ส่วนที่ 2: ภาพรวม 3 ช่วง ===== -->
+<section id="ภาพรวม">
+  <div class="กล่อง">
+    <h2>ภาพรวมเส้นทาง</h2>
+    <p class="คำอธิบาย">การขอตำแหน่งแบ่งเป็น 3 ช่วงใหญ่ กดที่หัวข้อเพื่อไปดูรายละเอียด</p>
+    <div class="ตาราง3">
+      <a class="การ์ด" href="#ระดับคณะ" style="text-decoration:none;color:inherit">
+        <span class="เวลา">ช่วง A</span>
+        <h3 style="margin-top:8px">ภายในคณะ</h3>
+        <p>ประเมินการสอน → ประเมินเอกสารประกอบการสอน/คำสอน → ยื่นเสนอขอตำแหน่ง</p>
+        <small>ประมาณ 1–3 เดือน · 15 ขั้นตอน</small>
+      </a>
+      <a class="การ์ด" href="#ระดับมหาวิทยาลัย" style="text-decoration:none;color:inherit">
+        <span class="เวลา">ช่วง B</span>
+        <h3 style="margin-top:8px">ระดับมหาวิทยาลัย</h3>
+        <p>กองทรัพยากรมนุษย์ตรวจ → ก.พ.ว. ตั้งผู้ทรงคุณวุฒิ → ประเมินผลงาน → ก.พ.ว. พิจารณา</p>
+        <small>ประมาณ 4–9 เดือน · 9 ขั้นตอน</small>
+      </a>
+      <a class="การ์ด" href="#ผลลัพธ์" style="text-decoration:none;color:inherit">
+        <span class="เวลา">ช่วง C</span>
+        <h3 style="margin-top:8px">อนุมัติและแต่งตั้ง</h3>
+        <p>สภาวิชาการ → สภามหาวิทยาลัย → อธิการบดีออกคำสั่ง (ศ. ต้องโปรดเกล้าฯ)</p>
+        <small>ขึ้นกับรอบการประชุม</small>
+      </a>
+    </div>
+
+    <p style="margin-top:18px"><b>สีบอกว่าใครรับผิดชอบ:</b><br>
+      <span class="ป้าย ผู้ขอ">อาจารย์ผู้ขอ</span>
+      <span class="ป้าย หัวหน้า">หัวหน้าสาขา</span>
+      <span class="ป้าย HR">HR FON</span>
+      <span class="ป้าย กรรมการ">กรรมการประเมิน</span>
+      <span class="ป้าย คณบดี">คณบดี</span>
+      <span class="ป้าย มหาลัย">มหาวิทยาลัย</span>
+    </p>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 3: ขั้นตอนภายในคณะ (Timeline HR FON) =====
+     เพิ่ม/ลบขั้นตอน: คัดลอก <li class="สี"> ... </li> หนึ่งก้อนแล้วแก้ข้อความ
+     สีที่ใช้ได้: ผู้ขอ / หัวหน้า / HR / กรรมการ / คณบดี / มหาลัย -->
+<section id="ระดับคณะ">
+  <div class="กล่อง">
+    <h2>ช่วง A: ขั้นตอนภายในคณะพยาบาลศาสตร์</h2>
+    <p class="คำอธิบาย">กดที่แต่ละขั้นเพื่อดูว่าต้องทำอะไร ใช้เอกสารอะไร</p>
+    <div class="หมายเหตุ">ระยะเวลาในป้ายสีส้ม (เช่น 2 วัน) เป็น<b>เป้าหมายการให้บริการของคณะ</b> ไม่ได้มาจากข้อบังคับ</div>
+
+    <ol class="ขั้นตอน">
+      <li class="ผู้ขอ"><span class="เลข">1</span>
+        <details>
+          <summary><span class="ป้าย ผู้ขอ">ผู้ขอ</span> ยื่นขอรับการประเมินการสอน + กรอกประวัติใน CMU-MIS
+            <span class="ย่อย">จัดส่งผลงาน แต่ยังไม่กด Submit ในระบบ</span></summary>
+          <ul>
+            <li>ทำ <b>บันทึกขั้นตอน 1</b> "ขอรับการประเมินการสอนเพื่อขอตำแหน่งทางวิชาการ" เรียนคณบดี</li>
+            <li>ระบุกระบวนวิชา หน่วยกิต วัน เวลา และห้องเรียนที่ขอให้ประเมิน</li>
+            <li>แนบ: ประมวลรายวิชา, แผนการสอน, ตารางสอน, เอกสารการสอน</li>
+          </ul>
+          <div class="สองช่อง">
+            <div class="สำหรับ app for-app"><b>👩‍🏫 อาจารย์</b>เลือกคาบที่สอนจริง แจ้งล่วงหน้าเพื่อให้มีเวลาตั้งกรรมการ</div>
+            <div class="สำหรับ hr for-hr"><b>🗂️ HR</b>รับเรื่อง ลงทะเบียนติดตาม ตรวจว่าแนบครบ 4 รายการ</div>
+          </div>
+        </details></li>
+
+      <li class="หัวหน้า"><span class="เลข">2</span>
+        <details>
+          <summary><span class="ป้าย หัวหน้า">หัวหน้าสาขา</span> พิจารณาเพิ่มเติม <span class="เวลา">2 วัน</span></summary>
+          <p>ตรวจความเหมาะสมของวิชาที่ขอประเมิน ถ้าต้องการข้อมูลเพิ่มจะส่งกลับให้ผู้ขอแก้</p>
+        </details></li>
+
+      <li class="หัวหน้า"><span class="เลข">3</span>
+        <details>
+          <summary><span class="ป้าย หัวหน้า">หัวหน้าสาขา</span> อนุมัติ แล้วส่งต่อ HR FON <span class="เวลา">2 วัน</span></summary>
+          <p>ลงนามอนุมัติในบันทึก แล้วส่งให้ HR FON ภายใน 2 วัน</p>
+        </details></li>
+
+      <li class="HR"><span class="เลข">4</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> ตรวจสอบเอกสาร <span class="เวลา">2 วัน</span></summary>
+          <ul>
+            <li>ตรวจความครบถ้วนของบันทึกและเอกสารแนบ</li>
+            <li>ตรวจระยะเวลาดำรงตำแหน่งเบื้องต้น (ดูหัวข้อ <a href="#คุณสมบัติ">คุณสมบัติ</a>)</li>
+          </ul>
+        </details></li>
+
+      <li class="HR"><span class="เลข">5</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> เสนอคณบดี ผ่านรองคณบดีฝ่าย HRM พิจารณากรรมการประเมิน <span class="เวลา">2 วัน</span></summary>
+          <p>เสนอรายชื่อกรรมการประเมินการสอนและเอกสารประกอบการสอน/คำสอน</p>
+        </details></li>
+
+      <li class="HR"><span class="เลข">6</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> เสนอคำสั่งแต่งตั้งกรรมการประเมิน <span class="เวลา">2 วัน</span></summary>
+          <div class="หมายเหตุ">วันที่ในคำสั่งคือ <b>วันเริ่มนับ 30 วัน</b> ของกรรมการ (ขั้นที่ 11)</div>
+        </details></li>
+
+      <li class="ผู้ขอ"><span class="เลข">7</span>
+        <details>
+          <summary><span class="ป้าย ผู้ขอ">ผู้ขอ</span> ส่งเอกสารประกอบการสอน / เอกสารคำสอน</summary>
+          <ul>
+            <li>ทำ <b>บันทึกขั้นตอน 2</b> "ขอส่งเอกสารประกอบการสอน/เอกสารคำสอน เพื่อขอตำแหน่งทางวิชาการ"</li>
+            <li>ระบุวิชา หน่วยกิต และวันที่ได้รับการประเมินการสอนไปแล้ว</li>
+          </ul>
+        </details></li>
+
+      <li class="HR"><span class="เลข">8</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> เตรียมเอกสาร ส่งให้คณะกรรมการประเมิน <span class="เวลา">2 วัน</span></summary>
+          <p>รวมเอกสารการสอน + เอกสารประกอบการสอน/คำสอน ส่งกรรมการพร้อมแบบประเมิน</p>
+        </details></li>
+
+      <li class="กรรมการ"><span class="เลข">9</span>
+        <details>
+          <summary><span class="ป้าย กรรมการ">กรรมการประเมิน</span> ประเมินการสอนและเอกสารประกอบการสอน/คำสอน</summary>
+          <ul>
+            <li>สังเกตการสอนตามวัน เวลา ที่ผู้ขอแจ้ง และอ่านเอกสาร</li>
+            <li>ผศ. ต้องแสดง "ความ<b>ชำนาญ</b>ในการสอน" · รศ. ต้องแสดง "ความ<b>ชำนาญพิเศษ</b>"</li>
+            <li>ประเมินครอบคลุม: การถ่ายทอดความรู้, การวัดผล, ความสอดคล้องกับผลลัพธ์การเรียนรู้ (CLO)</li>
+          </ul>
+        </details></li>
+
+      <li class="HR"><span class="เลข">10</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> นัดประชุม / เชิญกรรมการ</summary>
+          <p>นัดประชุมเพื่อสรุปผลการประเมินการสอนและเอกสาร</p>
+        </details></li>
+
+      <li class="กรรมการ"><span class="เลข">11</span>
+        <details>
+          <summary><span class="ป้าย กรรมการ">กรรมการประเมิน</span> ประชุมสรุปผลการประเมิน <span class="เวลา">ภายใน 30 วันนับจากคำสั่ง</span></summary>
+          <p>สรุปผลว่าผ่าน/ไม่ผ่าน พร้อมข้อเสนอแนะให้ผู้ขอแก้ไข</p>
+        </details></li>
+
+      <li class="ผู้ขอ"><span class="เลข">12</span>
+        <details>
+          <summary><span class="ป้าย ผู้ขอ">ผู้ขอ</span> รับทราบผล แก้ไขก่อนส่งกองทรัพยากรมนุษย์ <span class="เวลา">HR แจ้งผลภายใน 2 วัน</span></summary>
+          <p>แก้ไขเอกสารตามข้อเสนอแนะของกรรมการ</p>
+        </details></li>
+
+      <li class="คณบดี"><span class="เลข">13</span>
+        <details>
+          <summary><span class="ป้าย คณบดี">คณบดี</span> ลงนามเอกสารประกอบการขอตำแหน่ง <span class="เวลา">HR เสนอลงนามภายใน 2 วัน</span></summary>
+          <div class="หมายเหตุ"><b>สำคัญมาก:</b> ข้อบังคับ ข้อ 40 กำหนดให้ ผศ./รศ. มีผลตั้งแต่<b>วันที่หัวหน้าส่วนงานลงนามรับรอง</b>
+            (แต่ไม่ก่อนวันที่คุณสมบัติและผลงานครบ)</div>
+          <div class="สำหรับ hr for-hr"><b>🗂️ HR</b>ตรวจเช็กลิสต์ให้ครบ<b>ก่อน</b>เสนอลงนาม เพราะวันลงนามมีผลต่อวันแต่งตั้ง</div>
+        </details></li>
+
+      <li class="ผู้ขอ"><span class="เลข">14</span>
+        <details>
+          <summary><span class="ป้าย ผู้ขอ">ผู้ขอ</span> Submit ในระบบ CMU-MIS + บันทึกขั้นตอน 3</summary>
+          <p>ทำ <b>บันทึกขั้นตอน 3</b> "ขอเสนอแต่งตั้งให้ดำรงตำแหน่งทางวิชาการ" พร้อมเอกสาร 9 รายการ
+             (ดู <a href="#เช็กลิสต์">เช็กลิสต์</a>)</p>
+        </details></li>
+
+      <li class="HR"><span class="เลข">15</span>
+        <details>
+          <summary><span class="ป้าย HR">HR FON</span> ส่งเรื่องถึงกองทรัพยากรมนุษย์ <span class="เวลา">ภายใน 30 วัน</span></summary>
+          <p>ส่งเรื่องทั้งหมดต่อกองทรัพยากรมนุษย์ มช. เข้าสู่ช่วง B</p>
+        </details></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 4: ขั้นตอนระดับมหาวิทยาลัย (9 ขั้น) ===== -->
+<section id="ระดับมหาวิทยาลัย">
+  <div class="กล่อง">
+    <h2>ช่วง B: ขั้นตอนระดับมหาวิทยาลัย</h2>
+    <p class="คำอธิบาย">ตาม infographic "เส้นทางการขอตำแหน่งทางวิชาการ" และข้อบังคับ ข้อ 38–43</p>
+
+    <ol class="ขั้นตอน">
+      <li class="ผู้ขอ"><span class="เลข">1</span>
+        <details><summary><span class="ป้าย ผู้ขอ">ผู้เสนอขอ</span> ยื่นเรื่อง</summary>
+          <p>บันทึกเสนอ · แบบ ก.พ.อ.03 · ผลการประเมินการสอน · ผลงานทางวิชาการ</p></details></li>
+      <li class="หัวหน้า"><span class="เลข">2</span>
+        <details><summary><span class="ป้าย หัวหน้า">หัวหน้าภาควิชา</span> ตรวจสอบคุณสมบัติ และ ก.พ.อ.03</summary>
+          <p>ลงนามใน ก.พ.อ.03 ส่วนที่ 2 ว่าคุณสมบัติ "ครบถ้วน / ไม่ครบถ้วน"</p></details></li>
+      <li class="คณบดี"><span class="เลข">3</span>
+        <details><summary><span class="ป้าย คณบดี">คณบดี</span> สำนักงานเลขานุการคณะรับเรื่อง</summary>
+          <p>จากนั้น <b>อนุ กพว. ประจำคณะ</b> ตรวจสอบเอกสาร</p></details></li>
+      <li class="คณบดี"><span class="เลข">4</span>
+        <details><summary><span class="ป้าย คณบดี">คณบดี</span> เสนอกรรมการประจำคณะเห็นชอบ</summary>
+          <p>เสนอรายชื่อผู้ทรงคุณวุฒิ (สำหรับ ผศ., รศ.) · คณบดีให้ความเห็นว่า "เข้าข่าย / ไม่เข้าข่าย"</p></details></li>
+      <li class="มหาลัย"><span class="เลข">5</span>
+        <details><summary><span class="ป้าย มหาลัย">กองทรัพยากรมนุษย์</span> รับเรื่อง ตรวจ ก.พ.อ.03 <span class="เวลา">7 วัน</span></summary>
+          <div class="หมายเหตุ">infographic เดิมระบุว่าวันกองฯ รับเรื่องคือ "วันแต่งตั้ง" แต่ข้อบังคับ 2569 ข้อ 40
+            กำหนดเป็นวันที่หัวหน้าส่วนงานลงนามรับรอง — <b>โปรดยืนยันกับกองทรัพยากรมนุษย์</b></div></details></li>
+      <li class="มหาลัย"><span class="เลข">6</span>
+        <details><summary><span class="ป้าย มหาลัย">ก.พ.ว.</span> แต่งตั้งผู้ทรงคุณวุฒิ <span class="เวลา">ทาบทาม 45 วัน</span></summary>
+          <ul><li>แต่งตั้งประธานและกรรมการผู้ทรงคุณวุฒิ <b>3–5 คน</b> จากภายนอก มช. (ข้อ 38)</li>
+              <li>ศ. ต้องเลือกจากบัญชีของ ก.พ.อ. เท่านั้น</li>
+              <li>ถ้ายื่นวิธีที่ 3 (Scopus) <b>ไม่ต้องตั้งผู้ทรงคุณวุฒิ</b></li></ul></details></li>
+      <li class="กรรมการ"><span class="เลข">7</span>
+        <details><summary><span class="ป้าย กรรมการ">ผู้ทรงคุณวุฒิ</span> พิจารณาผลงาน
+          <span class="เวลา">ผศ./รศ. 2–4 เดือน</span> <span class="เวลา">ศ. 3–6 เดือน</span></summary>
+          <p>ประเมินคุณภาพผลงาน (B / A / A+) และจริยธรรมทางวิชาการ</p></details></li>
+      <li class="กรรมการ"><span class="เลข">8</span>
+        <details><summary><span class="ป้าย กรรมการ">ประธานผู้ทรงฯ</span> สรุปผล</summary>
+          <p>งดประชุม (ถ้าผลเป็นเอกฉันท์ สำหรับ ผศ./รศ.) หรือ ประชุม</p></details></li>
+      <li class="มหาลัย"><span class="เลข">9</span>
+        <details><summary><span class="ป้าย มหาลัย">ก.พ.ว.</span> ประชุมพิจารณาความเห็นของผู้ทรงคุณวุฒิ</summary>
+          <p>ลงมติ "สมควร / ไม่สมควร" แล้วเสนอสภาวิชาการ → สภามหาวิทยาลัย</p></details></li>
+    </ol>
+
+    <h3 id="ผลลัพธ์" style="margin-top:28px">ช่วง C: สภามหาวิทยาลัยอนุมัติ</h3>
+    <div class="ตาราง3">
+      <div class="การ์ด">
+        <h3>✅ อนุมัติ ผศ., รศ.</h3>
+        <p><b>อธิการบดี</b></p>
+        <ul>
+          <li>พนักงานมหาวิทยาลัย: อธิการบดีออกคำสั่ง</li>
+          <li>ข้าราชการ: เสนอ ส.ก.อ. พิจารณากำหนดตำแหน่ง + เงินประจำตำแหน่ง</li>
+        </ul>
+      </div>
+      <div class="การ์ด">
+        <h3>✅ อนุมัติ ศ.</h3>
+        <p><b>ส.ก.อ. / กระทรวงฯ</b></p>
+        <p>นำเสนอนายกรัฐมนตรี เพื่อนำความกราบบังคมทูล เพื่อทรงพระกรุณาโปรดเกล้าฯ แต่งตั้งศาสตราจารย์</p>
+      </div>
+      <div class="การ์ด">
+        <h3>❌ ถ้าไม่ผ่าน</h3>
+        <p>ขอทบทวนได้ <b>ไม่เกิน 2 ครั้ง</b> แต่ละครั้งภายใน <b>90 วัน</b> นับจากวันรับทราบมติ (ข้อ 66)</p>
+        <p>ยื่นผลงานเดิมซ้ำ ใช้ผลประเมินเดิมได้ภายใน 5 ปี (ข้อ 45)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 5: คุณสมบัติและเกณฑ์ (แท็บ ผศ. / รศ. / ศ.) ===== -->
+<section id="คุณสมบัติ">
+  <div class="กล่อง">
+    <h2>คุณสมบัติและเกณฑ์ผลงาน</h2>
+    <p class="คำอธิบาย">เลือกตำแหน่งที่ต้องการขอ</p>
+
+    <div class="แท็บ" role="tablist">
+      <button type="button" class="เลือกอยู่" data-tab="ผศ">ผู้ช่วยศาสตราจารย์</button>
+      <button type="button" data-tab="รศ">รองศาสตราจารย์</button>
+      <button type="button" data-tab="ศ">ศาสตราจารย์</button>
+      <button type="button" data-tab="เฉพาะด้าน">ตำแหน่งเฉพาะด้าน</button>
+    </div>
+
+    <!-- แท็บ ผศ. -->
+    <div class="หน้าแท็บ แสดง" id="แท็บ-ผศ">
+      <div class="ตาราง3">
+        <div class="การ์ด"><h3>⏳ ระยะเวลา (ข้อ 26)</h3>
+          <p>เป็นอาจารย์และผ่านทดลองงาน</p>
+          <ul><li>ปริญญาเอก ≥ <b>1 ปี</b></li><li>ปริญญาโท ≥ <b>4 ปี</b></li></ul>
+          <small>เวลาเป็นอาจารย์พิเศษ/ปฏิบัติงานวิชาชีพ นับได้ 3 ใน 4</small></div>
+        <div class="การ์ด"><h3>📚 การสอน (ข้อ 27)</h3>
+          <ul><li>สอน ≥ 3 หน่วยกิต หรือ 45 ชั่วโมง</li>
+              <li>แสดง "ความ<b>ชำนาญ</b>ในการสอน"</li>
+              <li>CMUPSF Badge ครบ 7 หัวข้อ</li></ul></div>
+        <div class="การ์ด"><h3>📝 ผลงาน ระดับ B (ข้อ 28)</h3>
+          <p>เลือก 1 ชุด:</p>
+          <ul><li>งานวิจัย 2 เรื่อง หรือ</li><li>งานวิจัย 1 + ผลงานลักษณะอื่น 1 หรือ</li><li>งานวิจัย 1 + ตำรา/หนังสือ 1</li></ul>
+          <small>ต้องเป็น First หรือ Corresponding author อย่างน้อย 1 เรื่อง · วารสารไทย TCI กลุ่ม 1–2</small></div>
+      </div>
+    </div>
+
+    <!-- แท็บ รศ. -->
+    <div class="หน้าแท็บ" id="แท็บ-รศ">
+      <div class="ตาราง3">
+        <div class="การ์ด"><h3>⏳ ระยะเวลา (ข้อ 29)</h3><p>ดำรงตำแหน่ง ผศ. ≥ <b>2 ปี</b></p></div>
+        <div class="การ์ด"><h3>📚 การสอน (ข้อ 30)</h3>
+          <ul><li>สอน ≥ 3 หน่วยกิต หรือ 45 ชั่วโมง</li><li>แสดง "ความ<b>ชำนาญพิเศษ</b>ในการสอน"</li><li>CMUPSF Badge ครบ 7 หัวข้อ</li></ul></div>
+        <div class="การ์ด"><h3>📝 ผลงาน (ข้อ 31) เลือก 1 วิธี</h3>
+          <p><b>วิธีที่ 1:</b> ระดับ B — วิจัย 2 (หรือวิจัย 1 + ลักษณะอื่น 1) <u>และ</u> ตำรา/หนังสือ 1</p>
+          <p><b>วิธีที่ 2:</b> วิจัย ≥ 3 (A ≥ 2 + B ≥ 1) หรือ วิจัย A ≥ 2 + ลักษณะอื่น B ≥ 1</p>
+          <p><b>วิธีที่ 3 (Scopus):</b> Q1–Q2 ≥ 10 เรื่องหลังเป็น ผศ. · citation ≥ 500 · h-index ≥ 8 · หัวหน้าโครงการทุนภายนอก ≥ 5</p>
+          <small>วารสารไทยต้องเป็น TCI กลุ่ม 1</small></div>
+      </div>
+    </div>
+
+    <!-- แท็บ ศ. -->
+    <div class="หน้าแท็บ" id="แท็บ-ศ">
+      <div class="ตาราง3">
+        <div class="การ์ด"><h3>⏳ ระยะเวลา (ข้อ 32)</h3><p>ดำรงตำแหน่ง รศ. ≥ <b>2 ปี</b></p></div>
+        <div class="การ์ด"><h3>📚 การสอน (ข้อ 33)</h3><p>แสดงหลักฐานการสอน ≥ 3 หน่วยกิต หรือ 45 ชั่วโมง (ไม่มีขั้นประเมินการสอน)</p></div>
+        <div class="การ์ด"><h3>📝 ผลงาน (ข้อ 34) เลือก 1 วิธี</h3>
+          <p><b>วิธีที่ 1:</b> ระดับ A วิจัยฐานนานาชาติ ≥ 5 เรื่อง <u>และ</u> ตำรา/หนังสือ ≥ 1</p>
+          <p><b>วิธีที่ 2:</b> วิจัย ≥ 5 (A+ ≥ 2 + A ≥ 3) หรือ วิจัยระดับ A ≥ 10</p>
+          <p><b>วิธีที่ 3 (Scopus):</b> Q1–Q2 ≥ 10 เรื่องหลังเป็น รศ. · citation ≥ 1,000 · h-index ≥ 18 · หัวหน้าโครงการทุนภายนอก ≥ 10</p></div>
+      </div>
+    </div>
+
+    <!-- แท็บ เฉพาะด้าน -->
+    <div class="หน้าแท็บ" id="แท็บ-เฉพาะด้าน">
+      <p>ใช้แบบ <b>ก.พ.อ.06 / 07</b> · ระยะเวลาและการสอนเหมือนสายทั่วไป · ผลงานต้องทำหลังได้ตำแหน่งปัจจุบัน</p>
+      <div class="เลื่อนตาราง"><table>
+        <tr><th>ด้าน</th><th>ผศ.</th><th>รศ.</th><th>ศ.</th><th>ส่วนร่วมขั้นต่ำ</th></tr>
+        <tr><td><b>การสอน</b> (เหมาะกับพยาบาล)</td><td>B 1 เรื่อง</td><td>B 2 หรือ A 1</td><td>A 2 หรือ A+ 1</td><td>50%</td></tr>
+        <tr><td><b>รับใช้ท้องถิ่นและสังคม</b></td><td>B 1 เรื่อง</td><td>B 2 หรือ A 1</td><td>A 2 หรือ A+ 1</td><td>50%</td></tr>
+        <tr><td>นวัตกรรม</td><td>B 1 เรื่อง</td><td>B 2 หรือ A 1</td><td>A 2 หรือ A+ 1</td><td>50%</td></tr>
+        <tr><td>ศาสนา</td><td>B 1 เรื่อง</td><td>B 2 หรือ A 1</td><td>A 2 หรือ A+ 1</td><td>80%</td></tr>
+        <tr><td>สร้างสรรค์สุนทรียะ ศิลปะ</td><td>B 2 เรื่อง</td><td>3 เรื่อง (A 2 + B 1)</td><td>5 เรื่อง (A+ 2 + A 3)</td><td>70/80/90%</td></tr>
+      </table></div>
+    </div>
+
+    <div class="หมายเหตุ">
+      <b>ข้อควรรู้ทุกตำแหน่ง</b>
+      <ul style="margin:6px 0 0">
+        <li>ถ้าระยะเวลาไม่ครบ ขอได้เฉพาะ <b>วิธีพิเศษ</b> — ผู้ทรงคุณวุฒิต้องเห็นเป็น<b>เอกฉันท์</b> (ข้อ 37, 39)</li>
+        <li>ผลงานที่ทำก่อนได้ตำแหน่งปัจจุบัน ต้องเผยแพร่ไม่เกิน 5 ปีก่อนหน้า และใช้ได้ไม่เกิน 1 ใน 3</li>
+        <li>วิทยานิพนธ์ของตนเองใช้ไม่ได้ เว้นแต่วิจัยต่อยอดชัดเจน (ข้อ 21)</li>
+        <li>วันเผยแพร่ = วันที่ได้เลข DOI (ถ้าไม่มี DOI ใช้วันที่ระบุ Volume และเลขหน้าครบ)</li>
+        <li>ข้อบังคับไม่ได้ระบุตรง ๆ ว่าพยาบาลศาสตร์อยู่กลุ่มใดของวิธีที่ 3 — <b>ยืนยันกับกองทรัพยากรมนุษย์</b></li>
+      </ul>
+    </div>
+
+    <details>
+      <summary>⚖️ จริยธรรมทางวิชาการ (หมวด 9) — อ่านก่อนยื่น</summary>
+      <ul>
+        <li>ห้ามลอกเลียน (plagiarism), สร้างข้อมูลเท็จ, บิดเบือนข้อมูล</li>
+        <li>ห้ามตีพิมพ์ซ้ำซ้อน หรือคัดลอกงานเดิมของตนเองโดยไม่อ้างอิง</li>
+        <li>งานวิจัยในคน ต้องแนบหลักฐานรับรองจริยธรรมการวิจัย (EC)</li>
+        <li>ถ้าตรวจพบ: งดพิจารณา และห้ามขอตำแหน่ง <b>5–10 ปี</b> · ถ้าพบหลังแต่งตั้ง จะถูกถอดถอน</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 6: เอกสารและแบบฟอร์ม ===== -->
+<section id="เอกสาร">
+  <div class="กล่อง">
+    <h2>เอกสารและแบบฟอร์ม</h2>
+
+    <h3>📄 บันทึกข้อความ 3 ฉบับ (เรียน คณบดีคณะพยาบาลศาสตร์)</h3>
+    <div class="ตาราง3">
+      <div class="การ์ด"><span class="เวลา">ขั้นตอน 1</span>
+        <h3 style="margin-top:8px">ขอรับการประเมินการสอน</h3>
+        <p>กรอก: ชื่อ, ตำแหน่ง, กลุ่มวิชา, ตำแหน่งที่จะขอ, อนุสาขา, เดือนที่คาดว่าจะยื่น, วิชา/หน่วยกิต/วัน/เวลา/ห้อง</p>
+        <small>แนบ: ประมวลรายวิชา, แผนการสอน, ตารางสอน, เอกสารการสอน</small></div>
+      <div class="การ์ด"><span class="เวลา">ขั้นตอน 2</span>
+        <h3 style="margin-top:8px">ขอส่งเอกสารประกอบการสอน/คำสอน</h3>
+        <p>กรอก: ข้อมูลเหมือนฉบับที่ 1 + วันที่ได้รับการประเมินการสอนแล้ว + จำนวนวิชา/หน่วยกิตของเอกสาร</p>
+        <small>แนบ: เอกสารประกอบการสอน/เอกสารคำสอน</small></div>
+      <div class="การ์ด"><span class="เวลา">ขั้นตอน 3</span>
+        <h3 style="margin-top:8px">ขอเสนอแต่งตั้งให้ดำรงตำแหน่ง</h3>
+        <p>เลือก: ผศ. / รศ. / ศ. / ศ.เชี่ยวชาญพิเศษ แล้วระบุรายการเอกสาร 9 รายการ</p>
+        <small>ดูรายการทั้งหมดใน <a href="#เช็กลิสต์">เช็กลิสต์</a></small></div>
+    </div>
+    <div class="หมายเหตุ">💡 สาขาวิชา: <b>พยาบาลศาสตร์ (รหัสสาขาวิชา 3701)</b> และอย่าลืมระบุ <b>อนุสาขาวิชา</b></div>
+
+    <h3 style="margin-top:24px">🧾 แบบ ก.พ.อ.03 — ใครกรอกส่วนไหน</h3>
+    <div class="เลื่อนตาราง"><table>
+      <tr><th>ส่วน</th><th>เนื้อหา</th><th>ผู้กรอก/ลงนาม</th></tr>
+      <tr><td>ส่วนที่ 1</td><td>ประวัติ, ภาระงานย้อนหลัง 3 ปี, ผลงาน (% ส่วนร่วม, citation, Impact Factor)</td><td><span class="ป้าย ผู้ขอ">ผู้ขอ</span> + FA/CA ลงนามรับรอง</td></tr>
+      <tr><td>ส่วนที่ 2</td><td>ประเมินคุณสมบัติ</td><td><span class="ป้าย หัวหน้า">หัวหน้าภาค</span> <span class="ป้าย คณบดี">คณบดี</span></td></tr>
+      <tr><td>ส่วนที่ 3</td><td>ผลการสอน + สมรรถนะ CMUPSF (Badge 7 หัวข้อ)</td><td><span class="ป้าย กรรมการ">อนุกรรมการประเมินการสอน</span> <span class="ป้าย คณบดี">หัวหน้าส่วนงาน</span></td></tr>
+      <tr><td>ส่วนที่ 4</td><td>ประเมินผลงานและจริยธรรม</td><td><span class="ป้าย กรรมการ">ผู้ทรงคุณวุฒิ</span> <span class="ป้าย มหาลัย">ก.พ.ว.</span></td></tr>
+      <tr><td>ส่วนที่ 5</td><td>มติอนุมัติ + วันที่แต่งตั้งมีผล</td><td><span class="ป้าย มหาลัย">สภามหาวิทยาลัย</span></td></tr>
+    </table></div>
+
+    <h3 style="margin-top:24px">🤝 แบบแสดงหลักฐานการมีส่วนร่วม</h3>
+    <p>ต้องยื่น<b>ทุกผลงาน</b> ยกเว้นงานที่ทำคนเดียว · ลงนามแล้ว<b>แก้ไขไม่ได้</b> · ระบุไม่ตรงความจริง = ผิดจริยธรรม</p>
+    <div class="สองช่อง">
+      <div class="การ์ด"><h3>กรณี 1: งานวิจัยตีพิมพ์</h3>
+        <ul><li>เลือกสถานะ: First author / Corresponding author / Co-author</li>
+            <li>อธิบายบทบาท 7 ด้าน (ก–ช): ความคิดริเริ่ม, การทำวิจัย, เก็บ/วิเคราะห์ข้อมูล, อภิปรายผล, เขียน Manuscript, การสนับสนุน, อื่น ๆ</li>
+            <li><b>ไม่ต้องระบุ %</b></li>
+            <li>ลงนาม: ผู้ขอ + First author + Corresponding author</li></ul></div>
+      <div class="การ์ด"><h3>กรณี 2: รายงานวิจัยฉบับสมบูรณ์ / ผลงานอื่น</h3>
+        <ul><li>ตาราง: ชื่อผู้ร่วมงาน · <b>ร้อยละ</b> · บทบาท</li>
+            <li>ผู้ขอต้องมีส่วนร่วม <b>≥ 50%</b></li>
+            <li>ผู้ร่วมงาน<b>ทุกคน</b>ต้องลงนาม</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 7: เช็กลิสต์ (ติ๊กได้ ระบบจำไว้ในเครื่องนี้) =====
+     เพิ่มรายการ: คัดลอก <li><label><input type="checkbox"><span>ข้อความ</span></label></li> -->
+<section id="เช็กลิสต์">
+  <div class="กล่อง">
+    <h2>เช็กลิสต์</h2>
+    <p class="คำอธิบาย">ติ๊กได้เลย ระบบจะจำไว้ในเครื่องนี้ (เปิดใหม่ก็ยังอยู่)</p>
+
+    <div class="สองช่อง">
+      <div class="การ์ด for-app">
+        <h3>👩‍🏫 ชุดเอกสารที่อาจารย์ต้องส่ง (บันทึกขั้นตอน 3)</h3>
+        <div class="ความคืบหน้า"><div></div></div>
+        <ul class="เช็ก" data-list="ผู้ขอ">
+          <li><label><input type="checkbox"><span>1. เอกสารการสอน (ระบุชั่วโมง/หน่วยกิตรวม)</span></label></li>
+          <li><label><input type="checkbox"><span>2. เอกสารประกอบการสอน / เอกสารคำสอน</span></label></li>
+          <li><label><input type="checkbox"><span>3. ผลงานทางวิชาการ + หลักฐานการมีส่วนร่วม + หลักฐานจริยธรรมการวิจัย (ฉบับจริง 1 ชุด + สำเนา 5 ชุด)</span></label></li>
+          <li><label><input type="checkbox"><span>4. หนังสือ/ตำรา (ถ้ามี) ฉบับจริง 1 + สำเนา 5</span></label></li>
+          <li><label><input type="checkbox"><span>5. ผลงานในลักษณะอื่น (ถ้ามี) ฉบับจริง 1 + สำเนา 6</span></label></li>
+          <li><label><input type="checkbox"><span>6. แบบ ก.พ.อ.03 จำนวน 9 ชุด</span></label></li>
+          <li><label><input type="checkbox"><span>7. หนังสือแจ้งความประสงค์เรื่องการรับรู้ข้อมูล 1 ชุด</span></label></li>
+          <li><label><input type="checkbox"><span>8. แบบตรวจสอบเอกสารประกอบการขอตำแหน่ง 1 ชุด</span></label></li>
+          <li><label><input type="checkbox"><span>9. แบบสรุปความเชี่ยวชาญ 1 ชุด</span></label></li>
+        </ul>
+      </div>
+
+      <div class="การ์ด for-hr">
+        <h3>🗂️ สิ่งที่ HR ต้องตรวจก่อนเสนอคณบดีลงนาม</h3>
+        <div class="ความคืบหน้า"><div></div></div>
+        <ul class="เช็ก" data-list="HR">
+          <li><label><input type="checkbox"><span>ระยะเวลาดำรงตำแหน่งครบ ณ วันที่จะเสนอลงนาม (ไม่ครบ = วิธีพิเศษ)</span></label></li>
+          <li><label><input type="checkbox"><span>ชั่วโมงสอน ≥ 3 หน่วยกิต / 45 ชั่วโมง</span></label></li>
+          <li><label><input type="checkbox"><span>ผลประเมินการสอนผ่าน (ผศ. ชำนาญ / รศ. ชำนาญพิเศษ)</span></label></li>
+          <li><label><input type="checkbox"><span>CMUPSF Badge ครบ 7 หัวข้อ</span></label></li>
+          <li><label><input type="checkbox"><span>แบบแสดงการมีส่วนร่วมครบทุกผลงาน ลงนาม FA/CA ครบ</span></label></li>
+          <li><label><input type="checkbox"><span>หลักฐาน EC สำหรับงานวิจัยในคน</span></label></li>
+          <li><label><input type="checkbox"><span>วารสารอยู่ในฐานที่กำหนด (TCI / PubMed / Scopus / WoS ฯลฯ)</span></label></li>
+          <li><label><input type="checkbox"><span>ก.พ.อ.03 ส่วนที่ 1 ลงนามผู้ขอ ระบุ citation และ Impact Factor</span></label></li>
+          <li><label><input type="checkbox"><span>จำนวนฉบับจริง/สำเนาครบตามบันทึกขั้นตอน 3</span></label></li>
+          <li><label><input type="checkbox"><span>ผู้ขอ Submit ในระบบ CMU-MIS แล้ว</span></label></li>
+        </ul>
+      </div>
+    </div>
+    <p class="ไม่พิมพ์"><button type="button" class="ปุ่มเล็ก" id="ล้างเช็กลิสต์">ล้างเครื่องหมายทั้งหมด</button></p>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 8: ตัวช่วยคำนวณ ===== -->
+<section id="ตัวช่วย" class="ไม่พิมพ์">
+  <div class="กล่อง">
+    <h2>ตัวช่วยคำนวณ</h2>
+
+    <div class="การ์ด">
+      <h3>⏳ ฉันครบเวลาขอตำแหน่งเมื่อไร?</h3>
+      <div class="ฟอร์ม">
+        <label>ตำแหน่งที่จะขอ
+          <select id="ตำแหน่งที่ขอ">
+            <option value="ผศ-เอก">ผศ. (วุฒิปริญญาเอก — 1 ปี)</option>
+            <option value="ผศ-โท">ผศ. (วุฒิปริญญาโท — 4 ปี)</option>
+            <option value="รศ">รศ. (เป็น ผศ. 2 ปี)</option>
+            <option value="ศ">ศ. (เป็น รศ. 2 ปี)</option>
+          </select></label>
+        <label>วันที่ได้รับแต่งตั้งตำแหน่งปัจจุบัน
+          <input type="date" id="วันแต่งตั้ง"></label>
+      </div>
+      <div class="ผลลัพธ์" id="ผลคุณสมบัติ" aria-live="polite">กรอกวันที่เพื่อดูผล</div>
+      <small>คำนวณจากเวลาขั้นต่ำเท่านั้น ยังไม่นับเวลาอาจารย์พิเศษ/วิชาชีพ (นับได้ 3 ใน 4)</small>
+    </div>
+
+    <div class="การ์ด" style="margin-top:14px">
+      <h3>📅 ประมาณการว่าจะใช้เวลานานแค่ไหน</h3>
+      <div class="ฟอร์ม">
+        <label>วันที่เริ่ม (ยื่นบันทึกขั้นตอน 1)
+          <input type="date" id="วันเริ่ม"></label>
+        <label>ตำแหน่ง
+          <select id="ตำแหน่งแผน">
+            <option value="ผศรศ">ผศ. / รศ.</option>
+            <option value="ศ">ศ.</option>
+          </select></label>
+      </div>
+      <div id="ผลแผน" aria-live="polite"></div>
+      <small>ตัวเลขเป็นการประมาณจาก infographic ของหน่วยงาน (ช่วงสั้นสุด–นานสุด) ไม่ใช่กำหนดตามข้อบังคับ
+        ช่วงที่มีเครื่องหมาย * เป็นการประมาณเพิ่มเติมเพราะขึ้นกับรอบประชุม</small>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ส่วนที่ 9: คำถามที่พบบ่อย ===== -->
+<section id="คำถาม">
+  <div class="กล่อง">
+    <h2>คำถามที่พบบ่อย</h2>
+    <div style="display:grid;gap:10px">
+      <details><summary>วันแต่งตั้งของฉันจะเป็นวันไหน?</summary>
+        <p>ผศ./รศ. มีผลตั้งแต่วันที่หัวหน้าส่วนงาน (คณบดี) ลงนามรับรอง แต่ไม่ก่อนวันที่คุณสมบัติและผลงานครบ (ข้อ 40)
+           จึงควรเตรียมเอกสารให้ครบก่อนเสนอลงนาม</p></details>
+      <details><summary>ระยะเวลาไม่ครบ ขอได้ไหม?</summary>
+        <p>ได้ โดย <b>วิธีพิเศษ</b> ผู้ทรงคุณวุฒิอย่างน้อย 3 คนต้องเห็นเป็นเอกฉันท์ และ รศ./ศ. ใช้ได้เฉพาะวิธีที่ 1
+           (ผลงานระดับ A / A+)</p></details>
+      <details><summary>ผลงานตีพิมพ์ใน TCI กลุ่ม 2 ใช้ได้ไหม?</summary>
+        <p>ผศ. ใช้ได้ (TCI 1–2) · รศ./ศ. ต้องเป็น TCI กลุ่ม 1 · บทความที่เผยแพร่ตามเกณฑ์เดิมใช้ได้ถึง 25 พ.ย. 2569</p></details>
+      <details><summary>ใช้บทความจากวิทยานิพนธ์ของตัวเองได้ไหม?</summary>
+        <p>ไม่ได้ เว้นแต่แสดงได้ว่าวิจัยต่อยอดจนก้าวหน้าชัดเจน และจะประเมินเฉพาะส่วนที่เพิ่มขึ้น (ข้อ 21)
+           ส่วนงานของนักศึกษาที่เราเป็นที่ปรึกษา ผู้ขอต้องเป็นผู้ริเริ่มและมีบทบาทสำคัญ</p></details>
+      <details><summary>เป็น Co-author ใช้ได้ไหม?</summary>
+        <p>ได้ แต่สำหรับ ผศ. ต้องมีอย่างน้อย 1 เรื่องที่เป็น First หรือ Corresponding author
+           และต้องอธิบายบทบาทในแบบแสดงการมีส่วนร่วมให้ชัด</p></details>
+      <details><summary>ไม่ผ่าน ทำอย่างไรต่อ?</summary>
+        <p>ขอทบทวนได้ไม่เกิน 2 ครั้ง ครั้งละภายใน 90 วันนับจากรับทราบมติ ถ้าเพิ่มหรือแก้ผลงานระหว่างทบทวน
+           จะนับเป็นการยื่นใหม่ (ข้อ 66–68)</p></details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== ส่วนที่ 10: ติดต่อ ===== -->
+<footer id="ติดต่อ">
+  <div class="กล่อง">
+    <h2>สอบถามรายละเอียดเพิ่มเติม</h2>
+    <p>หน่วยบริหารงานบุคคล คณะพยาบาลศาสตร์ มหาวิทยาลัยเชียงใหม่<br>
+       👤 นางเบญจพร จุฑาโรจน์<br>
+       ✉️ <a href="mailto:benjaporn.chu@cmu.ac.th">benjaporn.chu@cmu.ac.th</a><br>
+       📞 053 949071</p>
+    <small>คู่มือนี้สรุปจากข้อบังคับ มช. ว่าด้วยหลักเกณฑ์และวิธีการพิจารณาแต่งตั้ง ผศ. รศ. ศ. พ.ศ. 2569
+      หากมีข้อขัดแย้ง ให้ยึดตามข้อบังคับและประกาศฉบับล่าสุด</small>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════════════════════════
+     JavaScript — ส่วนที่ทำให้ปุ่มต่าง ๆ ทำงาน
+     (ไม่ต้องแก้ ถ้าแค่ต้องการเปลี่ยนข้อความ)
+     ════════════════════════════════════════════════════════ -->
+<script>
+// ---------- ตัวช่วยเล็ก ๆ ----------
+// อ่าน/บันทึกค่าในเครื่อง (ใส่ try ไว้กันบางเบราว์เซอร์ที่ปิดการบันทึก)
+function จำ(ชื่อ, ค่า) { try { localStorage.setItem(ชื่อ, JSON.stringify(ค่า)); } catch (e) {} }
+function อ่าน(ชื่อ) { try { return JSON.parse(localStorage.getItem(ชื่อ)); } catch (e) { return null; } }
+
+// แปลงวันที่เป็นแบบไทย เช่น 25 พ.ย. 2569
+function วันไทย(d) { return d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' }); }
+function บวกวัน(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+const หนึ่งวัน = 24 * 60 * 60 * 1000;
+
+
+// ---------- 1) ปุ่มเลือกบทบาท (อาจารย์ / HR / ทั้งหมด) ----------
+const ปุ่มบทบาท = document.querySelectorAll('[data-view]');
+function เลือกบทบาท(แบบ) {
+  document.body.className = แบบ;
+  ปุ่มบทบาท.forEach(b => b.classList.toggle('เลือกอยู่', b.dataset.view === แบบ));
+  จำ('บทบาท', แบบ);
+}
+ปุ่มบทบาท.forEach(b => b.addEventListener('click', () => เลือกบทบาท(b.dataset.view)));
+เลือกบทบาท(อ่าน('บทบาท') || 'ดูทั้งหมด');
+
+
+// ---------- 2) นับถอยหลังถึง 25 พ.ย. 2569 (= 25 Nov 2026) ----------
+const เส้นตาย = new Date(2026, 10, 25);   // เดือนนับจาก 0 → 10 = พฤศจิกายน
+const เหลือ = Math.ceil((เส้นตาย - new Date().setHours(0, 0, 0, 0)) / หนึ่งวัน);
+document.getElementById('นับถอยหลัง').textContent =
+  เหลือ > 0 ? 'เหลือ ' + เหลือ + ' วัน' : (เหลือ === 0 ? 'วันนี้!' : 'ครบกำหนดแล้ว');
+
+
+// ---------- 3) แท็บ ผศ. / รศ. / ศ. ----------
+document.querySelectorAll('[data-tab]').forEach(ปุ่ม => {
+  ปุ่ม.addEventListener('click', () => {
+    document.querySelectorAll('[data-tab]').forEach(b => b.classList.remove('เลือกอยู่'));
+    document.querySelectorAll('.หน้าแท็บ').forEach(p => p.classList.remove('แสดง'));
+    ปุ่ม.classList.add('เลือกอยู่');
+    document.getElementById('แท็บ-' + ปุ่ม.dataset.tab).classList.add('แสดง');
+  });
+});
+
+
+// ---------- 4) เช็กลิสต์ ติ๊กแล้วจำไว้ + แถบความคืบหน้า ----------
+document.querySelectorAll('.เช็ก').forEach(รายการ => {
+  const ชื่อ = 'เช็ก-' + รายการ.dataset.list;
+  const ช่อง = รายการ.querySelectorAll('input');
+  const แถบ = รายการ.parentElement.querySelector('.ความคืบหน้า div');
+  const ที่ติ๊กไว้ = อ่าน(ชื่อ) || [];
+
+  function อัปเดต() {
+    const สถานะ = [...ช่อง].map(c => c.checked);
+    จำ(ชื่อ, สถานะ);
+    แถบ.style.width = (สถานะ.filter(Boolean).length / ช่อง.length * 100) + '%';
+  }
+  ช่อง.forEach((c, i) => { c.checked = !!ที่ติ๊กไว้[i]; c.addEventListener('change', อัปเดต); });
+  อัปเดต();
+});
+document.getElementById('ล้างเช็กลิสต์').addEventListener('click', () => {
+  document.querySelectorAll('.เช็ก input').forEach(c => { c.checked = false; c.dispatchEvent(new Event('change')); });
+});
+
+
+// ---------- 5) ตัวคำนวณ: ครบเวลาเมื่อไร ----------
+const ปีที่ต้องรอ = { 'ผศ-เอก': 1, 'ผศ-โท': 4, 'รศ': 2, 'ศ': 2 };
+function คำนวณคุณสมบัติ() {
+  const ค่าวัน = document.getElementById('วันแต่งตั้ง').value;
+  const ผล = document.getElementById('ผลคุณสมบัติ');
+  if (!ค่าวัน) { ผล.textContent = 'กรอกวันที่เพื่อดูผล'; return; }
+
+  const ครบวันที่ = new Date(ค่าวัน);
+  ครบวันที่.setFullYear(ครบวันที่.getFullYear() + ปีที่ต้องรอ[document.getElementById('ตำแหน่งที่ขอ').value]);
+  const อีก = Math.ceil((ครบวันที่ - new Date()) / หนึ่งวัน);
+
+  ผล.innerHTML = อีก <= 0
+    ? '✅ ครบเวลาแล้วตั้งแต่ <b>' + วันไทย(ครบวันที่) + '</b> — ขอได้โดย<b>วิธีปกติ</b>'
+    : '⏳ จะครบเวลาวันที่ <b>' + วันไทย(ครบวันที่) + '</b> (อีก ' + อีก + ' วัน)<br>ถ้ายื่นก่อนวันนี้ ต้องใช้<b>วิธีพิเศษ</b> (ผู้ทรงคุณวุฒิต้องเอกฉันท์)';
+}
+['วันแต่งตั้ง', 'ตำแหน่งที่ขอ'].forEach(id => document.getElementById(id).addEventListener('input', คำนวณคุณสมบัติ));
+
+
+// ---------- 6) ตัวคำนวณ: ประมาณการระยะเวลา ----------
+// แต่ละช่วง: [ชื่อ, น้อยสุด(วัน), มากสุด(วัน)]  ← แก้ตัวเลขได้ที่นี่
+function ช่วงงาน(ตำแหน่ง) {
+  return [
+    ['หัวหน้าสาขาพิจารณา + อนุมัติ', 2, 4],
+    ['HR ตรวจเอกสาร → คำสั่งกรรมการ', 6, 8],
+    ['HR ส่งเอกสารให้กรรมการ', 2, 2],
+    ['กรรมการประเมินการสอน/เอกสาร', 14, 30],
+    ['แจ้งผล + ผู้ขอแก้ไข *', 9, 32],
+    ['คณบดีลงนาม', 2, 2],
+    ['ส่งกองทรัพยากรมนุษย์', 1, 30],
+    ['กองฯ ตรวจ ก.พ.อ.03', 7, 7],
+    ['ก.พ.ว. ทาบทามผู้ทรงฯ', 30, 45],
+    ['ผู้ทรงคุณวุฒิพิจารณา', ตำแหน่ง === 'ศ' ? 90 : 60, ตำแหน่ง === 'ศ' ? 180 : 120],
+    ['ก.พ.ว. → สภาวิชาการ → สภามหาวิทยาลัย *', 30, 90]
+  ];
+}
+function คำนวณแผน() {
+  const ค่าวัน = document.getElementById('วันเริ่ม').value;
+  const ที่แสดง = document.getElementById('ผลแผน');
+  if (!ค่าวัน) { ที่แสดง.innerHTML = '<p>กรอกวันที่เริ่มเพื่อดูแผน</p>'; return; }
+
+  const เริ่ม = new Date(ค่าวัน);
+  const ช่วง = ช่วงงาน(document.getElementById('ตำแหน่งแผน').value);
+  const รวมมากสุด = ช่วง.reduce((s, c) => s + c[2], 0);
+  const รวมน้อยสุด = ช่วง.reduce((s, c) => s + c[1], 0);
+
+  let สะสมน้อย = 0, สะสมมาก = 0, แถว = '';
+  ช่วง.forEach(([ชื่อ, น้อย, มาก]) => {
+    // แถบสีเริ่มจากวันเร็วสุด ยาวถึงวันช้าสุดของช่วงนั้น
+    const ซ้าย = สะสมน้อย / รวมมากสุด * 100;
+    สะสมน้อย += น้อย; สะสมมาก += มาก;
+    const กว้าง = Math.max((สะสมมาก - (สะสมน้อย - น้อย)) / รวมมากสุด * 100, 1.5);
+    แถว += '<div class="แถว"><span>' + ชื่อ + '<br><small>เสร็จ ' + วันไทย(บวกวัน(เริ่ม, สะสมน้อย)) +
+            ' – ' + วันไทย(บวกวัน(เริ่ม, สะสมมาก)) + '</small></span>' +
+            '<div class="ราง"><span style="left:' + ซ้าย + '%;width:' + Math.min(กว้าง, 100 - ซ้าย) + '%"></span></div></div>';
+  });
+
+  ที่แสดง.innerHTML =
+    '<p class="ผลลัพธ์">คาดว่าจะถึงสภามหาวิทยาลัยราว <b>' + วันไทย(บวกวัน(เริ่ม, รวมน้อยสุด)) +
+    ' – ' + วันไทย(บวกวัน(เริ่ม, รวมมากสุด)) + '</b> (ประมาณ ' + Math.round(รวมน้อยสุด / 30) + '–' +
+    Math.round(รวมมากสุด / 30) + ' เดือน)</p>' +
+    (document.getElementById('ตำแหน่งแผน').value === 'ศ' ? '<p>ศ. ต้องรอ ก.พ.อ. และโปรดเกล้าฯ เพิ่มเติม</p>' : '') +
+    '<div class="แถบเวลา">' + แถว + '</div>';
+}
+['วันเริ่ม', 'ตำแหน่งแผน'].forEach(id => document.getElementById(id).addEventListener('input', คำนวณแผน));
+document.getElementById('วันเริ่ม').valueAsDate = new Date();
+คำนวณแผน();
+
+
+// ---------- 7) ตอนสั่งพิมพ์: เปิดรายละเอียดทุกกล่องอัตโนมัติ ----------
+window.addEventListener('beforeprint', () => document.querySelectorAll('details').forEach(d => d.open = true));
+</script>
+</body>
+</html>
