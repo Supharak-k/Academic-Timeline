@@ -310,10 +310,6 @@
   @media (max-width: 860px) {
     .hero, .grid-2, .grid-3, .crit-grid, .outcome, footer .wrap { grid-template-columns: minmax(0, 1fr); }
     .hero { padding-top: 36px; gap: 28px; }
-    .lanes { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0; }
-    .lane-bg, .lane-h { display: none; }
-    .node { grid-column: 1 !important; grid-row: auto !important; }
-    .node .lane-label { display: inline-flex; }
     .g-row { grid-template-columns: minmax(0, 1fr); gap: 4px; }
     .g-date { text-align: left; }
   }
@@ -328,6 +324,25 @@
     .fact { grid-column: 1 / -1; justify-content: flex-start; }
   }
 
+  /* สวิมเลน: แท็บเล็ตยังเป็น 5 เลน (ย่อขนาด) · กว้างไม่ถึง 720px เลื่อนซ้าย-ขวาในกรอบ · มือถือ (<600px) เรียงแถวเดียว */
+  .lanes-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 12px; margin: 0 -12px; } /* เผื่อพื้นหลังเลนที่ยื่นออกข้าง */
+  .lanes-hint { display: none; font-size: .78rem; color: var(--faint); margin: 0 0 8px; }
+  @media (max-width: 1024px) {
+    .lanes { min-width: 720px; gap: 22px 16px; padding: 6px 2px 14px; }
+    .lane-bg { margin: -6px -7px 0; }
+    .lane-h { font-size: .78rem; gap: 6px; }
+    .node { padding: 8px 9px; font-size: .8rem; }
+    .node .s { font-size: .72rem; }
+    .node .time { font-size: .68rem; padding: 0 6px; white-space: normal; }
+  }
+  @media (min-width: 601px) and (max-width: 760px) { .lanes-hint { display: block; } }
+  @media (max-width: 600px) {
+    .lanes { min-width: 0; grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 0; }
+    .lanes-scroll { padding: 0; margin: 0; }
+    .lane-bg, .lane-h { display: none; }
+    .node { grid-column: 1 !important; grid-row: auto !important; padding: 10px 12px; font-size: .875rem; }
+    .node .lane-label { display: inline-flex; }
+  }
   /* ===== ตอนพิมพ์: สวิมเลน 5 เลนแบบเดียวกับบนจอ กว้างคงที่ แล้วย่อให้พอดีหน้า (JS ใส่คลาส printing) ===== */
   html.printing .lanes { width: 1500px; max-width: none; grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 18px 30px !important; padding: 8px 4px 12px !important; }
   html.printing .node { padding: 7px 12px; font-size: .9rem; }
@@ -347,6 +362,7 @@
     details.step, .card, .chk, .frow { break-inside: avoid; }
     #faculty { page: lanes; padding-top: 0; }
     #faculty .sec-head { margin-bottom: 12px; }
+    .lanes-scroll { overflow: visible !important; }
     .lanes { break-inside: avoid; }
   }
 </style>
@@ -466,7 +482,8 @@
   <!-- ===== 02 Swimlane ===== -->
   <section class="block" id="faculty">
     <div class="sec-head"><div class="sec-num">02</div><h2>ขั้นตอนระดับคณะ</h2><p>คลิกแต่ละกล่องเพื่อดูรายละเอียด เส้นเชื่อมมีสีตามผู้ส่งต่อ เส้นประคือการส่งต่อเนื่องของผู้ขอ</p></div>
-    <div class="lanes" id="lanes"></div>
+    <p class="lanes-hint">เลื่อนซ้าย–ขวาเพื่อดูครบ 5 เลน</p>
+    <div class="lanes-scroll"><div class="lanes" id="lanes"></div></div>
   </section>
 
   <!-- ===== 03 ระดับมหาวิทยาลัย ===== -->
